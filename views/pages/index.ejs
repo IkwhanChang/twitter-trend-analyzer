@@ -6,61 +6,141 @@
 
 <body>
 
-  <% include ../partials/nav.ejs %>
+  <body class="sidebar-disabled navbar-fixed ">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="/vendor/js/moment.min.js"></script>
 
-<div class="jumbotron text-center">
-  <div class="container">
-    <a href="/" class="lang-logo">
-      <img src="/lang-logo.png">
-    </a>
-    <h1>Getting Started with Node on Heroku</h1>
-    <p>This is a sample Node application deployed to Heroku. It's a reasonably simple app - but a good foundation for understanding how to get the most out of the Heroku platform.</p>
-    <a type="button" class="btn btn-lg btn-default" href="https://devcenter.heroku.com/articles/getting-started-with-nodejs"><span class="glyphicon glyphicon-flash"></span> Getting Started with Node</a>
-    <a type="button" class="btn btn-lg btn-primary" href="https://github.com/heroku/node-js-getting-started"><span class="glyphicon glyphicon-download"></span> Source on GitHub</a>
-  </div>
-</div>
-<div class="container">
-  <div class="alert alert-info text-center" role="alert">
-    To deploy your own copy, and learn the fundamentals of the Heroku platform, head over to the <a href="https://devcenter.heroku.com/articles/getting-started-with-nodejs" class="alert-link">Getting Started with Node on Heroku</a> tutorial.
-  </div>
-  <hr>
-  <div class="row">
-    <div class="col-md-6">
-      <h3><span class="glyphicon glyphicon-info-sign"></span> How this sample app works</h3>
-      <ul>
-        <li>This app was deployed to Heroku, either using Git or by using <a href="https://github.com/heroku/node-js-getting-started">Heroku Button</a> on the repository.</li>
 
-        <li>When Heroku received the source code, it fetched all the dependencies in the <a href="https://github.com/heroku/node-js-getting-started/blob/master/package.json">package.json</a>, creating a deployable slug.</li>
-        <li>The platform then spins up a dyno, a lightweight container that provides an isolated environment in which the slug can be mounted and executed.</li>
-        <li>You can scale your app, manage it, and deploy over <a href="https://addons.heroku.com/">150 add-on services</a>, from the Dashboard or CLI.</li>
-      </ul>
+  <div class="main-wrap">
+        <nav class="navigation">
+            <!-- START Navbar -->
+<div class="navbar-default navbar navbar-fixed-top">
+       <div class="container-fluid">
+
+           <div class="navbar-header">
+            <a class="current navbar-brand" href="starter.html">
+                <strong>Twitter Trend Analyzer</strong>
+            </a>
+
+          </div>
+
+        <div class="collapse navbar-collapse" id="navbar">
+
+
+            <!-- START Left Side Navbar -->
+            <ul class="nav navbar-nav navbar-left clearfix yamm">
+
+                <!-- START Switch Sidebar ON/OFF -->
+                <li id="sidebar-switch" class="hidden-xs">
+                    <a class="action-toggle-sidebar-slim" data-placement="bottom" data-toggle="tooltip" href="#" title="Slim sidebar on/off">
+                        <i class="fa fa-lg fa-bars fa-fw"></i>
+                    </a>
+                </li>
+                <!-- END Switch Sidebar ON/OFF -->
+
+                <li class="spin-search-box clearfix hidden-xs">
+                    <a href="#" class="pull-left">
+                        <i class="fa fa-search fa-lg icon-inactive"></i>
+                        <i class="fa fa-close  fa-lg icon-active"></i>
+                    </a>
+                    <div class="input-group input-group-sm pull-left p-10">
+                        <input type="text" class="form-control" placeholder="Search for...">
+                        <span class="input-group-btn active">
+                            <button class="btn btn-primary" type="button">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </span>
+                    </div>
+                </li>
+            </ul>
+            <!-- START Left Side Navbar -->
+
+            <!-- START Right Side Navbar -->
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#">Source</i></a></li>
+
+            </ul>
+            <!-- END Right Side Navbar -->
+        </div>
+
     </div>
-    <div class="col-md-6">
-      <h3><span class="glyphicon glyphicon-link"></span> Next Steps</h3>
-      <ul>
-        <li>If you are following the <a href="https://devcenter.heroku.com/articles/getting-started-with-nodejs">Getting Started</a> guide, then please head back to the tutorial and follow the next steps!</li>
-        <li>If you deployed this app by deploying the Heroku Button, then in a command line shell, run:</li>
-        <ul>
-          <li><code>git clone https://github.com/heroku/node-js-getting-started.git</code> - this will create a local copy of the source code for the app</li>
-          <li><code>cd node-js-getting-started</code> - change directory into the local source code repository</li>
-          <li><code>heroku git:remote -a &lt;your-app-name></code> - associate the Heroku app with the repository</li>
-          <li>You'll now be set up to run the app locally, or <a href="https://devcenter.heroku.com/articles/getting-started-with-nodejs#push-local-changes">deploy changes</a> to Heroku</li>
+</div>
+<!-- END Navbar -->
+ <!-- START Sidebars -->
+<aside class="navbar-default sidebar">
+
+    <div class="sidebar-overlay-head">
+        <img src="/images/spin-logo-inverted.png" alt="Logo" />
+        <a href="javascript:void(0)" class="sidebar-switch action-sidebar-close">
+            <i class="fa fa-times"></i>
+        </a>
+    </div>
+    <div class="sidebar-logo">
+        <img class="logo-default" src="/images/spin-logo-big-inverse-@2X.png" alt="Logo" width="53">
+        <img class="logo-slim" src="/images/spin-logo-slim.png" alt="Logo">
+    </div>
+
+    <div class="sidebar-content">
+        <!-- START Tree -->
+        <ul class="side-menu m-t-2">
+            <li  class='active'>
+                <a href="#" title="Page">
+                    <i class="fa fa-lg fa-file-o fa-fw"></i><span class="nav-label">Analyzer</span>
+                </a>
+            </li>
+            <li>
+                <a href="#" title="Apps">
+                    <i class="fa fa-files-o fa-fw fa-lg"></i><span class="nav-label">Predict</span> <i class="fa arrow"></i>
+                </a>
+
+            </li>
         </ul>
-      </ul>
-      <h3><span class="glyphicon glyphicon-link"></span> Helpful Links</h3>
-      <ul>
-        <li><a href="https://www.heroku.com/home">Heroku</a></li>
-        <li><a href="https://devcenter.heroku.com/">Heroku Dev Center</a></li>
-        <li><a href="https://devcenter.heroku.com/articles/getting-started-with-nodejs">Getting Started with Node on Heroku</a></li>
-        <li><a href="https://devcenter.heroku.com/articles/deploying-nodejs">Deploying Node Apps on Heroku</a></li>
-      </ul>
+        <!-- END Tree  -->
+
+        <div class="sidebar-default-visible"><hr></div>
+
     </div>
-  </div> <!-- row -->
-   <div class="alert alert-info text-center" role="alert">
-    Please do work through the Getting Started guide, even if you do know how to build such an application.  The guide covers the basics of working with Heroku, and will familiarize you with all the concepts you need in order to build and deploy your own apps.
-  </div>
+</aside>
+<!-- END Sidebars -->
+
+        </nav>
+
+        <div class="content">
+            <!-- START Sub-Navbar with Header only-->
+<div class="sub-navbar sub-navbar__header">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="page-header m-t-0">
+                    <h3 class="m-t-0">Starter HTML/CSS</h3>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+<!-- END Sub-Navbar with Header only-->
+
+<% include ../partials/content.ejs %>
 
 
+        <!-- START Footer -->
+<footer>
+    <div class="container-fluid">
+        <p class="text-gray-dark">
+            © 2017 - Spring-2017, CMPE 220, Computer Engineering at San Jose State University
+        </p>
+    </div>
+</footer>
+<!-- END Footer -->
+
+    </div>
+    <link rel="stylesheet" href="/vendor/css/lib.min.css">
+
+      <!-- JS -->
+      <script src="/javascript/app/helpers.js"></script>
+      <script src="/javascript/app/layoutControl.js"></script>
+      <script src="/javascript/app/rightSidebar.js"></script>
+      <script src="/javascript/app/sidebar.js"></script>
+      <script src="/javascript/app/main.js"></script>
 </body>
 </html>

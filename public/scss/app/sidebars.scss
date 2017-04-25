@@ -1,0 +1,6684 @@
+@import 'variables';
+@import 'helpers';
+/********************************************************
+					Sidebar visual
+********************************************************/
+//====================Functions==========================
+@mixin active-link-no-accent(){
+	color: $sidebar-item-hover-color;
+	background-color: $sidebar-active-background;
+	text-decoration: none;
+}
+
+@mixin active-link($isRTL: "false"){
+	color: $sidebar-active-color;
+	background-color: $sidebar-active-background;
+	text-decoration: none;
+
+	//Inner border
+	box-shadow: 0px -1px 0px 0px $sidebar-border-color inset,
+			  0px 1px 0px 0px $sidebar-border-color inset;
+	//Accent
+	@if $isRTL != "false"{
+		box-shadow: -3px 0 0 0 $sidebar-active-accent-color inset,
+					0px -1px 0px 0px $sidebar-border-color inset,
+					0px 1px 0px 0px $sidebar-border-color inset
+	}
+	@else{
+		box-shadow: 3px 0 0 0 $sidebar-active-accent-color inset,
+					0px -1px 0px 0px rgba(40,41,48,1.0) inset,
+					0px 1px 0px 0px transparent inset;
+	}
+}
+
+@mixin active-link-side(){
+	box-shadow: none;
+	background: none;
+}
+//======================Logos============================
+body{
+	.sidebar-logo{
+		border-bottom: $sidebar-border;
+		border-right: $sidebar-border;
+		height: 150px;
+
+		> img{
+			display: block;
+			position: relative;
+			top: 50%;
+			transform: translateY(-50%);
+			margin: 0 auto;
+		}
+
+		.logo-slim{
+			display: none;
+		}
+	}
+
+	&.sidebar-big-icons{
+		.sidebar-logo{
+
+		}
+	}
+
+	&.sidebar-slim{
+		.sidebar-logo{
+			height: $navbar-height;
+			.logo-default{
+				display: none;
+			}
+
+			.logo-slim{
+				display: block;
+			}
+		}
+	}
+
+	&.sidebar-full-height{
+		.sidebar .sidebar-logo{
+			display: block;
+		}
+		.navbar .navbar-brand{
+			display: none;
+		}
+	}
+
+	&:not(.sidebar-full-height){
+		.sidebar .sidebar-logo{
+			display: none;
+		}
+
+		.navbar .navbar-brand{
+			display: initial;
+		}
+	}
+}
+//=====================Avatar============================
+.avatar-container {
+	display: none;
+}
+body.sidebar-big-icons.sidebar-with-avatar {
+	.sidebar-logo {
+		display: none;
+	}
+
+	.avatar-container {
+		display: block;
+	}
+}
+
+//==============Hidden Sidebar Head======================
+.sidebar .sidebar-overlay-head {
+	display: none;
+	justify-content: space-between;
+	align-items: center;
+	height: $navbar-height;
+	border: $sidebar-border;
+	border-width: 0 $sidebar-border-width $sidebar-border-width 0;
+	padding: 0 25px 0 20px;
+
+	.sidebar-switch {
+		color: $sidebar-item-color;
+		font-size: 18px;
+	}
+}
+
+body.sidebar-overlay.sidebar-overlay__open .sidebar .sidebar-overlay-head {
+	display: flex;
+}
+
+body.sidebar-overlay .sidebar .sidebar-content {
+	max-height: calc(100% - #{$navbar-height});
+	position: relative;
+	overflow-y: auto;
+	-webkit-overflow-scrolling: touch;
+}
+
+//=====================Default===========================
+.navigation .sidebar{
+	background: linear-gradient(to bottom, rgba(39,40,46,1) 0%, rgba(58,65,80,1) 100%);
+	direction: ltr;
+
+	ul.side-menu {
+		list-style-type: none;
+		background: none;
+		padding-left: 0;
+		margin-bottom: 0;
+		> li{
+			border-bottom: none;
+			box-sizing: border-box;
+
+			> a{
+				display: block;
+				width: 100%;
+				padding: 15px 25px 15px 20px;
+				color: $sidebar-item-color;
+				position: relative;
+
+				> i:first-child{
+					color: $sidebar-item-icon-color;
+				}
+
+				.nav-label{
+					font-size: $sidebar-font-size;
+					text-transform: uppercase;
+					letter-spacing: 2px;
+				}
+
+				i:first-child{
+					margin-right: 10px;
+					width: 30px;
+ 					text-align: center;
+				}
+
+				&:hover{
+					@include active-link-no-accent();
+
+					box-shadow: 0px -1px 0px 0px rgba(40,41,48,1.0) inset,
+								0px 1px 0px 0px transparent inset;
+
+					> i:first-child{
+						color: $sidebar-item-hover-icon-color;
+					}
+				}
+
+				&:focus,
+				&:active{
+					text-decoration: none;
+				}
+			}
+
+			&.active > a {
+				@include active-link();
+
+				> i:first-child{
+					color: $sidebar-active-icon-color;
+				}
+			}
+
+			//Set active if there is an active element in children
+			//but the root is not expanded
+			&.nested-active:not(.expanded) > a{
+				@include active-link();
+
+				> i:first-child{
+					color: $sidebar-active-icon-color;
+				}
+			}
+
+			/*border-bottom: $sidebar-border;*/
+			border-right: $sidebar-border;
+		}
+	}
+}
+
+.rtl .navigation .sidebar{
+	ul.side-menu > li{
+		> a{
+			direction: rtl;
+			text-align: right;
+
+			padding: 15px 20px 15px 25px;
+
+			i:first-child{
+				margin-right: 0;
+				margin-left: 4px;
+			}
+		}
+
+		&.active > a {
+			@include active-link($isRTL:true);
+		}
+
+		&.nested-active:not(.expanded) > a{
+			@include active-link($isRTL:true);
+		}
+
+		border-right: none;
+		border-left: $sidebar-border;
+	}
+
+	.pull-right{
+		float: left !important;
+	}
+}
+//======================Big Icons========================
+.sidebar-big-icons .navigation .sidebar{
+	ul.side-menu > li{
+		> a{
+			> *:not(:first-child):not(.nav-label){
+				display: none;
+			}
+			text-align: center;
+			padding-top: 20px;
+			padding-bottom: 20px;
+
+			> i:first-child{
+				display: inline-block;
+				width: 100%;
+				font-size: 24px;
+				margin-bottom: 10px;
+				margin-right: 0;
+			}
+		}
+	}
+}
+
+//=======================Slim============================
+.sidebar-slim .navigation .sidebar{
+	ul.side-menu > li {
+		> a{
+			> *:not(:first-child){
+				display: none;
+			}
+
+			text-align: center;
+			padding: 15px 10px;
+
+			.nav-label{
+				display: none;
+			}
+
+			i:first-child{
+				margin-right: 0;
+			}
+		}
+	}
+}
+
+/********************************************************
+					Sub menus definition
+********************************************************/
+//=======================Default========================
+.navigation .sidebar ul.side-menu {
+	li{
+		position: relative;
+
+		//SubMenu container
+		ul{
+			transition: all 0.2s;
+			display: block;
+			list-style-type: none;
+			padding-left: 0;
+			li{
+				&.active {
+					> a:hover,
+					> a {
+						@include active-link();
+					}
+				}
+				a{
+					position: relative;
+					display: block;
+					color: $sidebar-item-color;
+					padding: 15px 25px 15px 0;
+
+					.nav-label{
+						font-size: $sidebar-font-size;
+						text-transform: uppercase;
+						letter-spacing: 2px;
+					}
+
+					&:hover{
+						@include active-link-no-accent();
+
+						box-shadow: 0px -1px 0px 0px rgba(40,41,48,1.0) inset,
+									0px 1px 0px 0px transparent inset;
+					}
+
+					&:focus,
+					&:active{
+						text-decoration: none;
+					}
+				}
+
+				//Set active if there is an active element in children
+				//but the root is not expanded
+				&.nested-active:not(.expanded) > a{
+					@include active-link();
+				}
+			}
+			display: none;
+			height: 0;
+			overflow: hidden;
+
+			&.velocity-animating{
+				display: block;
+			}
+
+			transition: max-height 1s;
+			-webkit-transition: max-height 1s;
+		}
+		&.expanded > ul{
+			display: block;
+			height: auto;
+		}
+
+		//SubMenu arrow
+		> a > .arrow{
+			position: absolute;
+			right: 25px;
+			top: 50%;
+			transform: translateY(-50%);
+			&:before{
+				content: "\f104";
+			}
+		}
+
+		&.expanded{
+			> a > .arrow{
+				&:before{
+					content: "\f107";
+				}
+			}
+		}
+	}
+}
+
+.rtl .navigation .sidebar ul.side-menu {
+	li{
+		> a > .arrow{
+			right: auto;
+			left: 13px;
+		}
+
+		ul	li{
+			a{
+				padding: 15px 0 15px 25px;
+				text-align: right;
+			}
+
+			&.active {
+				> a:hover,
+				> a {
+					@include active-link($isRTL:true);
+				}
+			}
+
+			&.nested-active:not(.expanded) > a{
+				@include active-link($isRTL:true);
+			}
+		}
+	}
+}
+
+//=============SubMenu specific levels definitions========
+//					Default submenu
+body:not(.rtl) .navigation .sidebar ul.side-menu > li  ul{
+	&.submenu-level-1{
+		> li > a{
+			padding-left: 59px;
+		}
+	}
+
+	&.submenu-level-2{
+		> li > a{
+			padding-left: 70px;
+		}
+	}
+
+	&.submenu-level-3{
+		> li > a{
+			padding-left: 70px;
+		}
+	}
+}
+
+body.rtl .navigation .sidebar ul.side-menu > li  ul{
+	&.submenu-level-1{
+		> li > a{
+			padding-right: 50px;
+		}
+	}
+
+	&.submenu-level-2{
+		> li > a{
+			padding-right: 60px;
+		}
+	}
+
+	&.submenu-level-3{
+		> li > a{
+			padding-right: 70px;
+		}
+	}
+}
+
+//					Side submenu
+body{
+	&.sidebar-big-icons,
+	&.sidebar-slim{
+		.navigation .sidebar ul.side-menu > li ul{
+			&.submenu-level-1{
+				> li > a{
+					padding-left: 0;
+				}
+			}
+			&.submenu-level-2{
+				> li > a{
+					padding-left: 15px;
+				}
+			}
+			&.submenu-level-3{
+				> li > a{
+					padding-left: 30px;
+				}
+			}
+		}
+	}
+
+	&.rtl.sidebar-big-icons,
+	&.rtl.sidebar-slim{
+		.navigation .sidebar ul.side-menu > li ul{
+			&.submenu-level-1{
+				> li > a{
+					padding-right: 0;
+				}
+			}
+			&.submenu-level-2{
+				> li > a{
+					padding-right: 15px;
+				}
+			}
+			&.submenu-level-3{
+				> li > a{
+					padding-right: 30px;
+				}
+			}
+		}
+	}
+}
+//======================Slim/Big icons=====================
+body{
+	&.sidebar-big-icons,
+	&.sidebar-slim{
+		.navigation .sidebar ul.side-menu {
+			> li{
+				position: static;
+				//Hide arrow
+				> a {
+					padding-left: 5px;
+					padding-right: 5px;
+					word-wrap: break-word;
+				}
+				//Outer submenu definition
+				> ul{
+					padding: 15px;
+					min-width: $outer-submenu-width;
+					position: absolute;
+					left: 100%;
+					top: 0;
+					background: $sidebar-active-background;
+					min-height: 100%;
+					z-index: 100;
+					border-right: $sidebar-border;
+					border-bottom: $sidebar-border;
+
+
+					> li:first-child > a{
+						padding-top: 15px;
+					}
+
+					li {
+						> a{
+							padding: 0 20px 0px 0;
+							margin-bottom: 15px;
+							/*padding-left: 0px;
+							padding-right: 20px;
+							padding-bottom: 15px;
+							*/
+							&:hover{
+								@include active-link-side();
+							}
+
+							.arrow{
+								right: 3px;
+							}
+						}
+
+						&.active > a{
+							@include active-link-side();
+						}
+
+						&.nested-active:not(.expanded) > a{
+							@include active-link-side();
+						}
+					}
+				}
+				//Display submenu on hover and change item border
+				&:hover{
+					&.has-submenu{
+						border-right-color:  $sidebar-active-background;
+					}
+					> ul{
+						display: block;
+					}
+					//&.nested-active > a{
+						//.active-link-side();
+					//}
+
+					&:not(.nested-active):not(.active){
+						> a{
+							@include active-link-no-accent();
+
+							> i:first-child{
+								color: $sidebar-item-hover-icon-color;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	&.rtl.sidebar-big-icons,
+	&.rtl.sidebar-slim{
+		.navigation .sidebar ul.side-menu {
+			> li{
+				position: static;
+
+				> ul{
+					left: auto;
+					right: 100%;
+					border-right: none;
+					border-left: $sidebar-border;
+
+					li > a{
+						padding: 0 0 0 20px;
+
+						.arrow{
+							right: auto;
+							left: 3px;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	//Outer-submenu (BIG ICONS ONLY)
+	&.sidebar-big-icons{
+        .submenu-level-1 {
+			-webkit-box-shadow: 5px 0px 21px -5px rgba(0,0,0,0.6);
+			-moz-box-shadow: 5px 0px 21px -5px rgba(0,0,0,0.6);
+			box-shadow: 5px 0px 21px -5px rgba(0,0,0,0.08);
+
+			z-index: 2;
+		}
+
+		&.sidebar-full-height{
+			&:not(.navbar-disabled) .navigation .sidebar ul.side-menu > li > .submenu-level-1 {
+				top: $navbar-height;
+				min-height: calc(100% - #{$navbar-height});
+			}
+
+			&.sidebar-fixed:not(.navbar-fixed):not(.navbar-disabled) .affix .submenu-level-1 {
+				top: 0 !important;
+				min-height: 100% !important;
+			}
+		}
+    }
+
+	//Outer-submenu title (BIG ICONS ONLY)
+	&.sidebar-big-icons .navigation .sidebar ul.side-menu > li > ul:before{
+		content: attr(data-submenu-title);
+		display: block;
+		width: 100%;
+		padding-bottom: 10px;
+		border-bottom: $outer-submenu-title-line;
+		font-size: $outer-submenu-title-size;
+		color: $outer-submenu-title-color;
+	}
+
+	&.rtl.sidebar-big-icons .navigation .sidebar ul.side-menu > li > ul:before{
+		text-align: right;
+	}
+
+	//Outer-submenu (SLIM ONLY)
+	&.sidebar-slim .navigation .sidebar ul.side-menu > li{
+		position: relative;
+
+		.badge{
+			display: none;
+		}
+
+		ul{
+			position: absolute;
+			left: 100%;
+			height: auto;
+			min-width: 200px;
+			overflow: visible;
+			background: $sidebar-active-background;
+			padding: 0;
+			top: -$sidebar-border-width;
+
+			border-top: $sidebar-border;
+			border-bottom: $sidebar-border;
+			border-right: none;
+
+			> li{
+				> a{
+					margin: 0;
+					padding: 10px 24px 10px 13px !important;
+
+					> .arrow{
+						right: 10px;
+
+						transform: scaleX(-1) translateY(-50%);
+					}
+				}
+
+				border-right: $sidebar-border;
+
+				&:not(:first-child){
+					border-left: $sidebar-border;
+				}
+
+				&:hover{
+					> ul{
+						display: block;
+					}
+
+					&:not(.active) > a{
+						@include active-link-no-accent();
+					}
+				}
+			}
+		}
+
+		&.primary-submenu{
+			> ul{
+				top: 0;
+
+				> li{
+					border-left: none;
+				}
+			}
+		}
+	}
+
+	&.rtl.sidebar-slim .navigation .sidebar ul.side-menu > li{
+		position: relative;
+
+		ul{
+			left: auto;
+			right: 100%;
+			border-left: none;
+
+			> li{
+				> a{
+					margin: 0;
+					padding: 10px 13px 10px 24px !important;
+
+					> .arrow{
+						right: auto;
+						left: 10px;
+						transform: translateY(-50%);
+					}
+				}
+
+				border-right: none;
+				border-left: $sidebar-border;
+
+				&:not(:first-child){
+
+					border-right: $sidebar-border;
+				}
+			}
+		}
+		&.primary-submenu{
+			> ul > li{
+				border-right: none;
+			}
+		}
+	}
+}
+/********************************************************
+					Right sidebar
+********************************************************/
+body{
+	&:not(.navbar-fixed):not(.sidebar-overlay){
+		.right-sidebar.affix{
+			height: 100%;
+			top: 0;
+		}
+	}
+
+	&.navbar-fixed .right-sidebar{
+		position: fixed;
+	}
+
+	&.navbar-disabled .right-sidebar {
+		top: 0;
+		height: 100%;
+	}
+
+	&.boxed-layout{
+		@media #{$large}{
+			&:not(.navbar-fixed) .right-sidebar.affix-top{
+				left: auto !important;
+				right: 0 !important;
+			}
+
+			&.navbar-fixed .right-sidebar,
+			.right-sidebar.affix {
+				left: auto;
+				right: 50%;
+				transform: translateX($box-layout-width / 2);
+			}
+
+			.right-sidebar{
+				display: none;
+				margin-right: 0;
+
+				&.active{
+					display: block;
+				}
+			}
+		}
+	}
+
+	&.sidebar-overlay {
+		.right-sidebar {
+			top: 0 !important;
+			height: 100%;
+			z-index: 1060;
+		}
+	}
+}
+
+.right-sidebar{
+	width: $right-sidebar-width;
+	/*padding-right: 20px;*/
+	padding-left: 20px;
+	position: absolute;
+	overflow: hidden;
+	top: $navbar-height;
+	height: calc(100% - #{$navbar-height});
+	right: 0;
+	margin-right: -$right-sidebar-width;
+	background-color: white;
+	border-left: transparent;
+	z-index: 99;
+	//overflow-y: scroll;
+
+	transition: margin 0.2s ease-out;
+
+	&.affix{
+		position: fixed;
+	}
+
+	&.active{
+		margin-right: 0;
+	}
+}
+
+body.rtl .right-sidebar{
+	right: auto;
+	left: 0;
+
+	margin-left: -$right-sidebar-width;
+	margin-right: 0;
+
+	&.active{
+		margin-left: 0;
+	}
+}
+
+.cmd-right-sidebar-toggle{
+	&:focus i{
+		color: $text-muted;
+	}
+
+	&:hover i{
+		color: white;
+	}
+
+	&.active i{
+		color: white;
+	}
+}
+
+//RightSidebar Vertical scroll
+.right-sidebar .vertical-scroll-container{
+  position: relative;
+  overflow-y: auto;
+}
+
+//RightSidebar Extra Content
+.right-sidebar .right-sidebar-extra-content{
+  position: absolute;
+  width: 100%;
+  left: 100%;
+
+  padding-left: 0;
+  //padding-right: 20px;
+
+  background-color: white;
+  transition: left 0.2s;
+
+  z-index: 1200;
+  &.active{
+    left: 0;
+  }
+}
+
+/********************************************************
+					Additional classes
+********************************************************/
+.navigation .sidebar .sidebar-section{
+  padding-left: 23px;
+  padding-right: 25px;
+}
+
+.navigation .sidebar hr{
+  border-top-color: $sidebar-border-color;
+}
+
+.sidebar-slim .sidebar-container-default,
+.sidebar-big-icons .sidebar-container-default {
+    display: none;
+}
+
+body:not(.sidebar-big-icons) .sidebar-container-big-icons {
+    display: none;
+}
+
+body:not(.sidebar-full-height) .sidebar-container-slim,
+body:not(.sidebar-slim) .sidebar-container-slim {
+    display: none;
+}
+
+.add-on-container {
+    border-right: 1px solid $sidebar-border-color;
+    border-bottom: 1px solid $gray-darker;
+}
+
+.sidebar-container-default {
+	padding-top: 3rem;
+    padding-bottom: 3rem;
+}
+
+.sidebar-container-big-icons {
+	padding: 3rem 0;
+    text-align: center;
+}
+
+.sidebar-container-slim {
+	min-height: $navbar-height;
+    position: relative;
+
+	> .avatar {
+        position: absolute !important;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+}
+
+.bar-details {
+	@extend .flex-space-between;
+	padding: 3px 0;
+}
+
+/*************************************************************
+/*				SIDEBAR COLORS
+/*************************************************************/
+
+// BADGES IN COLOUR SIDEBAR MENU
+.sidebar-primary,
+.sidebar-info,
+.sidebar-success,
+.sidebar-warning,
+.sidebar-danger,
+.sidebar-lightingyellow,
+.sidebar-softpurple {
+    .navigation .side-menu .label.label-outline,
+    .navigation .side-menu .badge.badge-outline {
+        border-color: rgba(255, 255, 255, 0.7);
+        color: rgba(255, 255, 255, 0.7);
+    }
+}
+
+// LIGHT SIDEBAR MODIFIERS
+body.sidebar-light-primary,
+body.sidebar-light-success,
+body.sidebar-light-info,
+body.sidebar-light-warning,
+body.sidebar-light-danger,
+body.sidebar-light-lightingyellow,
+body.sidebar-light-softpurple  {
+    .navigation .sidebar {
+		color: RGBA(10, 10, 10, 0.3);
+
+        // HEADERS
+        h1, h2, h3, h4, h5, h6,
+        .h1, .h2, .h3, .h4, .h5, .h6 {
+            color: $gray-darker;
+        }
+
+        // TEXTS
+        .text-white {
+            color: $gray-darker;
+        }
+
+        // NAVS
+        .nav > li > a:hover,
+        .nav > li > a:focus {
+            background-color: lighten($gray-lighter, 60%);
+        }
+
+        // AVATARS
+        .avatar .avatar-status {
+            border-color: white;
+        }
+    }
+}
+
+
+// SIDEBAR DEFAULT
+body {
+
+    .main-wrap {
+        background-color: #3A4150;
+    }
+
+    .navigation .sidebar {
+        background: linear-gradient(-180deg, #27282E 0%, #3A4150 100%);
+        color: rgba(255, 255, 255, 0.3); // Regular Text
+        box-shadow: 0px -15px 20px 3px rgba(0,0,0,0.1);
+
+        // ========= TEXT-MUTED ===============
+        .text-muted {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        hr {
+            border-top-color: rgba(255, 255, 255, 0.1);
+        }
+
+        // ======= Avatar Addons=========
+        .add-on-container,
+        .avatar-container {
+            border-right: none;
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-overlay-head {
+            border-color: rgba(255, 255, 255, 0.1);
+            border-width: 0 0 1px 0;
+
+            .sidebar-switch {
+                color: #555;
+            }
+        }
+        .sidebar-logo {
+            border-right: none;
+            border-bottom-color: rgba(255, 255, 255, 0.2);
+            background: white;
+        }
+
+        // ============ MENU ==================
+        .sidebar-content .side-menu {
+            // ========== All Menus ===========
+            // General LI settings
+            li {
+                // General A settings
+                border-right: none;
+
+                a {
+                    color: rgba(255, 255, 255, 0.4);     // FONT Main Color
+
+                    // Hover Link
+                    &:hover {
+                        color: yellow;
+                        background: #F1F1F1;
+                    }
+                }
+
+                // General hover A settings
+                > a:hover {
+                    color: rgba(255, 255, 255, 1);
+                    background: rgba(255, 255, 255, 0.3);
+                }
+
+                // General active A settings
+                &.active > a {
+                    background: rgba(255, 255, 255, 0.3);
+                    color: #555555;
+                }
+            }
+
+            // ========= Main Menus ===========
+            > li {
+                // General A settings
+                > a {
+                    border-right: 0px solid $brand-warning;
+
+                    // General Icon Settings
+                    > i:first-child {
+                        color: rgba(255, 255, 255, 0.2);     // ICON Main Color
+                    }
+                }
+
+                > a:hover {
+                    color: white;
+                    background: #383B44;
+                    box-shadow: 0px -1px 0px 0px #383B44 inset;
+                }
+
+                // Active A settings
+                &.nested-active:not(.expanded) > a,
+                &.active > a {
+                    //Accent (switch to none if disabled)
+                    box-shadow: 3px 0px 0px 0px $brand-warning inset, 0px -1px 0px 0px #383B44 inset;
+                    background: #383B44;
+                    color: white;
+
+                    // Active Icon Color
+                    > i:first-child {
+                        color: white;
+                    }
+                }
+            }
+
+            // ========== Sub Menus =============
+            > li ul > li {
+                > a {
+                    // Sub Menu A General Settings
+                    border-right: 0px solid $brand-warning;
+                }
+
+                > a:hover {
+                    color: white;
+                    background: #383B44;
+                    box-shadow: 0px -1px 0px 0px #383B44 inset;
+                }
+
+                // Submenu Active A settings
+                &.nested-active:not(.expanded) > a,
+                &.active > a {
+                    //Accent (switch to none if disabled)
+                    box-shadow: 3px 0px 0px 0px $brand-warning inset, 0px -1px 0px 0px #383B44 inset;
+                    background: #383B44;
+                    color: white;
+
+                    // Active Icon Color
+                    > i:first-child {
+                        color: wheat;
+                    }
+                }
+            }
+        }
+    }
+
+    // Sidebar-Info Slim
+    &.sidebar-slim .navigation .sidebar {
+	.sidebar-content .side-menu {
+        // =========== All Menus ===========
+        li {
+            &.active > a {
+                box-shadow: none;
+            }
+
+            // Hover Background Color for menu item and SideMenu
+            &:not(.nested-active):hover > a,
+            &:not(.active):hover > a,
+            &:hover > a {
+                color: white;
+                background-color: #383B44;
+            }
+        }
+
+        // ============ Main Menu ===========
+        > li {
+			&:hover:not(.nested-active):not(.active) {
+				> a {
+					color: #555555;
+					background: #383B44;
+					box-shadow: 0px -1px 0px 0px #383B44 inset;
+				}
+
+				> a > i:first-child {
+					color: white;
+				}
+			}
+        }
+
+        // ============ Sub Menus ===========
+        li > ul {
+            border-color: #383B44;
+            background-color: #383B44;
+            box-shadow: 14px 4px 20px 3px rgba(0,0,0,0.1);
+            > li {
+                border-color: transparent;
+
+				> a {
+					border-color: #383B44;
+				}
+            }
+
+            > li:hover > a {
+                color: white;
+                background-color: #383B44;
+                box-shadow: none;
+            }
+
+            > li.nested-active > a,
+            > li.active > a {
+                color: white;
+                background-color: #383B44;
+                box-shadow: none;
+            }
+        }
+	}
+}
+
+
+    &.sidebar-big-icons .navigation .sidebar {
+        .sidebar-content .side-menu {
+            // =========== All Menus ==============
+            li {
+                &.active > a {
+                    color: khaki;
+                }
+            }
+
+            // ============ Main Menu ===========
+            > li {
+                &:hover:not(.active):not(.nested-active) > a {
+                    box-shadow: 0 -1px 0 0 #383B44 inset;
+                    background: #383B44;
+                    color: white;
+
+                    > i:first-child {
+                        color: white;
+                    }
+                }
+            }
+
+            // ============ Sub Menus ===========
+            li > ul {
+                background-color: #383B44;
+                border-color: #383B44;
+
+                > li {
+                    > a {
+                        box-shadow: none;
+                        border: none;
+                    }
+
+                    &.nested-active > a,
+                    &.active > a {
+                        background: none;
+                        box-shadow: none;
+                    }
+
+                    &.active > a {
+                        color: white;
+                    }
+
+                    &:hover:not(.active):not(.nested-active) > a {
+                        background: none;
+                    }
+                }
+
+                // Sub Menu Top Title
+                &:before {
+                    color: white;
+                    border-color: RGBA(255, 255, 255, 0.2);
+                }
+            }
+        }
+    }
+
+
+}
+
+
+
+
+// SIDEBAR-DARK-PRIMARY
+.sidebar-dark-primary {
+
+    .main-wrap {
+        background-color: #3A4150;
+    }
+
+    .navigation .sidebar {
+        background: linear-gradient(-180deg, #27282E 0%, #3A4150 100%);
+        color: rgba(255, 255, 255, 0.5); // Regular Text
+        box-shadow: 0px -15px 20px 3px rgba(0,0,0,0.1);
+
+        // ========= TEXT-MUTED ===============
+        .text-muted {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        hr {
+            border-top-color: rgba(255, 255, 255, 0.1);
+        }
+
+        // ======= Avatar Addons=========
+        .add-on-container,
+        .avatar-container {
+            border-right: none;
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .sidebar-overlay-head {
+            border-color: rgba(255, 255, 255, 0.1);
+            border-width: 0 0 1px 0;
+
+            .sidebar-switch {
+                color: #555;
+            }
+        }
+        .sidebar-logo {
+            border-right: none;
+            border-bottom-color: rgba(255, 255, 255, 0.2);
+            background: white;
+        }
+
+        // ============ MENU ==================
+        .sidebar-content .side-menu {
+            // ========== All Menus ===========
+            // General LI settings
+            li {
+                // General A settings
+                border-right: none;
+
+                a {
+                    color: rgba(255, 255, 255, 0.4);        // FONT Main Color
+
+                    // Hover Link
+                    &:hover {
+                        color: yellow;
+                        background: #F1F1F1;
+                    }
+                }
+
+                // General hover A settings
+                > a:hover {
+                    color: rgba(255, 255, 255, 1);
+                    background: rgba(255, 255, 255, 0.3);
+                }
+
+                // General active A settings
+                &.active > a {
+                    background: rgba(255, 255, 255, 0.3);
+                    color: #555555;
+                }
+            }
+
+            // ========= Main Menus ===========
+            > li {
+                // General A settings
+                > a {
+                    border-right: 0px solid $brand-primary;
+
+                    // General Icon Settings
+                    > i:first-child {
+                        color: rgba(255, 255, 255, 0.2);    // ICON Main Color
+                    }
+                }
+
+                > a:hover {
+                    color: white;
+                    background: #383B44;
+                    box-shadow: 0px -1px 0px 0px #383B44 inset;
+                }
+
+                // Active A settings
+                &.nested-active:not(.expanded) > a,
+                &.active > a {
+                    //Accent (switch to none if disabled)
+                    box-shadow: 3px 0px 0px 0px $brand-primary inset, 0px -1px 0px 0px #383B44 inset;
+                    background: #383B44;
+                    color: white;
+
+                    // Active Icon Color
+                    > i:first-child {
+                        color: white;
+                    }
+                }
+            }
+
+            // ========== Sub Menus =============
+            > li ul > li {
+                > a {
+                    // Sub Menu A General Settings
+                    border-right: 0px solid $brand-primary;
+                }
+
+                > a:hover {
+                    color: white;
+                    background: #383B44;
+                    box-shadow: 0px -1px 0px 0px #383B44 inset;
+                }
+
+                // Submenu Active A settings
+                &.nested-active:not(.expanded) > a,
+                &.active > a {
+                    //Accent (switch to none if disabled)
+                    box-shadow: 3px 0px 0px 0px $brand-primary inset, 0px -1px 0px 0px #383B44 inset;
+                    background: #383B44;
+                    color: white;
+
+                    // Active Icon Color
+                    > i:first-child {
+                        color: wheat;
+                    }
+                }
+            }
+        }
+    }
+
+    // Sidebar-Info Slim
+    &.sidebar-slim .navigation .sidebar {
+	.sidebar-content .side-menu {
+        // =========== All Menus ===========
+        li {
+            &.active > a {
+                box-shadow: none;
+            }
+
+            // Hover Background Color for menu item and SideMenu
+            &:not(.nested-active):hover > a,
+            &:not(.active):hover > a,
+            &:hover > a {
+                color: white;
+                background-color: #383B44;
+            }
+        }
+
+        // ============ Main Menu ===========
+        > li {
+			&:hover:not(.nested-active):not(.active) {
+				> a {
+					color: #555555;
+					background: #383B44;
+					box-shadow: 0px -1px 0px 0px #383B44 inset;
+				}
+
+				> a > i:first-child {
+					color: white;
+				}
+			}
+        }
+
+        // ============ Sub Menus ===========
+        li > ul {
+            border-color: #383B44;
+            background-color: #383B44;
+            box-shadow: 14px 4px 20px 3px rgba(0,0,0,0.1);
+            > li {
+                border-color: transparent;
+
+				> a {
+					border-color: #383B44;
+				}
+            }
+
+            > li:hover > a {
+                color: white;
+                background-color: #383B44;
+                box-shadow: none;
+            }
+
+            > li.nested-active > a,
+            > li.active > a {
+                color: white;
+                background-color: #383B44;
+                box-shadow: none;
+            }
+        }
+	}
+}
+
+
+    &.sidebar-big-icons .navigation .sidebar {
+        .sidebar-content .side-menu {
+            // =========== All Menus ==============
+            li {
+                &.active > a {
+                    color: khaki;
+                }
+            }
+
+            // ============ Main Menu ===========
+            > li {
+                &:hover:not(.active):not(.nested-active) > a {
+                    box-shadow: 0 -1px 0 0 #383B44 inset;
+                    background: #383B44;
+                    color: white;
+
+                    > i:first-child {
+                        color: white;
+                    }
+                }
+            }
+
+            // ============ Sub Menus ===========
+            li > ul {
+                background-color: #383B44;
+                border-color: #383B44;
+
+                > li {
+                    > a {
+                        box-shadow: none;
+                        border: none;
+                    }
+
+                    &.nested-active > a,
+                    &.active > a {
+                        background: none;
+                        box-shadow: none;
+                    }
+
+                    &.active > a {
+                        color: white;
+                    }
+
+                    &:hover:not(.active):not(.nested-active) > a {
+                        background: none;
+                    }
+                }
+
+                // Sub Menu Top Title
+                &:before {
+                    color: white;
+                    border-color: RGBA(255, 255, 255, 0.2);
+                }
+            }
+        }
+    }
+
+
+}
+
+// SIDEBAR-DARK-INFO
+.sidebar-dark-info {
+
+    .main-wrap {
+        background-color: #3A4150;
+    }
+
+    .navigation .sidebar {
+        background: linear-gradient(-180deg, #27282E 0%, #3A4150 100%);
+        color: rgba(255, 255, 255, 0.5); // Regular Text
+        box-shadow: 0px -15px 20px 3px rgba(0,0,0,0.1);
+
+        // ========= TEXT-MUTED ===============
+        .text-muted {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        hr {
+            border-top-color: rgba(255, 255, 255, 0.1);
+        }
+
+        // ======= Avatar Addons=========
+        .add-on-container,
+        .avatar-container {
+            border-right: none;
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .sidebar-overlay-head {
+            border-color: rgba(255, 255, 255, 0.1);
+            border-width: 0 0 1px 0;
+
+            .sidebar-switch {
+                color: #555;
+            }
+        }
+        .sidebar-logo {
+            border-right: none;
+            border-bottom-color: rgba(255, 255, 255, 0.2);
+            background: white;
+        }
+
+        // ============ MENU ==================
+        .sidebar-content .side-menu {
+            // ========== All Menus ===========
+            // General LI settings
+            li {
+                // General A settings
+                border-right: none;
+
+                a {
+                    color: rgba(255, 255, 255, 0.4);        // FONT Main Color
+
+                    // Hover Link
+                    &:hover {
+                        color: yellow;
+                        background: #F1F1F1;
+                    }
+                }
+
+                // General hover A settings
+                > a:hover {
+                    color: rgba(255, 255, 255, 1);
+                    background: rgba(255, 255, 255, 0.3);
+                }
+
+                // General active A settings
+                &.active > a {
+                    background: rgba(255, 255, 255, 0.3);
+                    color: #555555;
+                }
+            }
+
+            // ========= Main Menus ===========
+            > li {
+                // General A settings
+                > a {
+                    border-right: 0px solid $brand-info;
+
+                    // General Icon Settings
+                    > i:first-child {
+                        color: rgba(255, 255, 255, 0.2);
+                    }
+                }
+
+                > a:hover {
+                    color: white;
+                    background: #383B44;
+                    box-shadow: 0px -1px 0px 0px #383B44 inset;
+                }
+
+                // Active A settings
+                &.nested-active:not(.expanded) > a,
+                &.active > a {
+                    //Accent (switch to none if disabled)
+                    box-shadow: 3px 0px 0px 0px $brand-info inset, 0px -1px 0px 0px #383B44 inset;
+                    background: #383B44;
+                    color: white;
+
+                    // Active Icon Color
+                    > i:first-child {
+                        color: white;
+                    }
+                }
+            }
+
+            // ========== Sub Menus =============
+            > li ul > li {
+                > a {
+                    // Sub Menu A General Settings
+                    border-right: 0px solid $brand-info;
+                }
+
+                > a:hover {
+                    color: white;
+                    background: #383B44;
+                    box-shadow: 0px -1px 0px 0px #383B44 inset;
+                }
+
+                // Submenu Active A settings
+                &.nested-active:not(.expanded) > a,
+                &.active > a {
+                    //Accent (switch to none if disabled)
+                    box-shadow: 3px 0px 0px 0px $brand-info inset, 0px -1px 0px 0px #383B44 inset;
+                    background: #383B44;
+                    color: white;
+
+                    // Active Icon Color
+                    > i:first-child {
+                        color: wheat;
+                    }
+                }
+            }
+        }
+    }
+
+    // Sidebar-Info Slim
+    &.sidebar-slim .navigation .sidebar {
+	.sidebar-content .side-menu {
+        // =========== All Menus ===========
+        li {
+            &.active > a {
+                box-shadow: none;
+            }
+
+            // Hover Background Color for menu item and SideMenu
+            &:not(.nested-active):hover > a,
+            &:not(.active):hover > a,
+            &:hover > a {
+                color: white;
+                background-color: #383B44;
+            }
+        }
+
+        // ============ Main Menu ===========
+        > li {
+			&:hover:not(.nested-active):not(.active) {
+				> a {
+					color: #555555;
+					background: #383B44;
+					box-shadow: 0px -1px 0px 0px #383B44 inset;
+				}
+
+				> a > i:first-child {
+					color: white;
+				}
+			}
+        }
+
+        // ============ Sub Menus ===========
+        li > ul {
+            border-color: #383B44;
+            background-color: #383B44;
+            box-shadow: 14px 4px 20px 3px rgba(0,0,0,0.1);
+            > li {
+                border-color: transparent;
+
+				> a {
+					border-color: #383B44;
+				}
+            }
+
+            > li:hover > a {
+                color: white;
+                background-color: #383B44;
+                box-shadow: none;
+            }
+
+            > li.nested-active > a,
+            > li.active > a {
+                color: white;
+                background-color: #383B44;
+                box-shadow: none;
+            }
+        }
+	}
+}
+
+
+    &.sidebar-big-icons .navigation .sidebar {
+        .sidebar-content .side-menu {
+            // =========== All Menus ==============
+            li {
+                &.active > a {
+                    color: khaki;
+                }
+            }
+
+            // ============ Main Menu ===========
+            > li {
+                &:hover:not(.active):not(.nested-active) > a {
+                    box-shadow: 0 -1px 0 0 #383B44 inset;
+                    background: #383B44;
+                    color: white;
+
+                    > i:first-child {
+                        color: white;
+                    }
+                }
+            }
+
+            // ============ Sub Menus ===========
+            li > ul {
+                background-color: #383B44;
+                border-color: #383B44;
+
+                > li {
+                    > a {
+                        box-shadow: none;
+                        border: none;
+                    }
+
+                    &.nested-active > a,
+                    &.active > a {
+                        background: none;
+                        box-shadow: none;
+                    }
+
+                    &.active > a {
+                        color: white;
+                    }
+
+                    &:hover:not(.active):not(.nested-active) > a {
+                        background: none;
+                    }
+                }
+
+                // Sub Menu Top Title
+                &:before {
+                    color: white;
+                    border-color: RGBA(255, 255, 255, 0.2);
+                }
+            }
+        }
+    }
+
+
+}
+
+// SIDEBAR-DARK-SUCCESS
+.sidebar-dark-success {
+
+    .main-wrap {
+        background-color: #3A4150;
+    }
+
+    .navigation .sidebar {
+        background: linear-gradient(-180deg, #27282E 0%, #3A4150 100%);
+        color: rgba(255, 255, 255, 0.5); // Regular Text
+        box-shadow: 0px -15px 20px 3px rgba(0,0,0,0.1);
+
+        // ========= TEXT-MUTED ===============
+        .text-muted {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        hr {
+            border-top-color: rgba(255, 255, 255, 0.1);
+        }
+
+        // ======= Avatar Addons=========
+        .add-on-container,
+        .avatar-container {
+            border-right: none;
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .sidebar-overlay-head {
+            border-color: rgba(255, 255, 255, 0.1);
+            border-width: 0 0 1px 0;
+
+            .sidebar-switch {
+                color: #555;
+            }
+        }
+        .sidebar-logo {
+            border-right: none;
+            border-bottom-color: rgba(255, 255, 255, 0.2);
+            background: white;
+        }
+
+        // ============ MENU ==================
+        .sidebar-content .side-menu {
+            // ========== All Menus ===========
+            // General LI settings
+            li {
+                // General A settings
+                border-right: none;
+
+                a {
+                    color: rgba(255, 255, 255, 0.4);        // FONT Main Color
+
+                    // Hover Link
+                    &:hover {
+                        color: yellow;
+                        background: #F1F1F1;
+                    }
+                }
+
+                // General hover A settings
+                > a:hover {
+                    color: rgba(255, 255, 255, 1);
+                    background: rgba(255, 255, 255, 0.3);
+                }
+
+                // General active A settings
+                &.active > a {
+                    background: rgba(255, 255, 255, 0.3);
+                    color: #555555;
+                }
+            }
+
+            // ========= Main Menus ===========
+            > li {
+                // General A settings
+                > a {
+                    border-right: 0px solid $brand-success;
+
+                    // General Icon Settings
+                    > i:first-child {
+                        color: rgba(255, 255, 255, 0.2);
+                    }
+                }
+
+                > a:hover {
+                    color: white;
+                    background: #383B44;
+                    box-shadow: 0px -1px 0px 0px #383B44 inset;
+                }
+
+                // Active A settings
+                &.nested-active:not(.expanded) > a,
+                &.active > a {
+                    //Accent (switch to none if disabled)
+                    box-shadow: 3px 0px 0px 0px $brand-success inset, 0px -1px 0px 0px #383B44 inset;
+                    background: #383B44;
+                    color: white;
+
+                    // Active Icon Color
+                    > i:first-child {
+                        color: white;
+                    }
+                }
+            }
+
+            // ========== Sub Menus =============
+            > li ul > li {
+                > a {
+                    // Sub Menu A General Settings
+                    border-right: 0px solid $brand-success;
+                }
+
+                > a:hover {
+                    color: white;
+                    background: #383B44;
+                    box-shadow: 0px -1px 0px 0px #383B44 inset;
+                }
+
+                // Submenu Active A settings
+                &.nested-active:not(.expanded) > a,
+                &.active > a {
+                    //Accent (switch to none if disabled)
+                    box-shadow: 3px 0px 0px 0px $brand-success inset, 0px -1px 0px 0px #383B44 inset;
+                    background: #383B44;
+                    color: white;
+
+                    // Active Icon Color
+                    > i:first-child {
+                        color: wheat;
+                    }
+                }
+            }
+        }
+    }
+
+    // Sidebar-Info Slim
+    &.sidebar-slim .navigation .sidebar {
+	.sidebar-content .side-menu {
+        // =========== All Menus ===========
+        li {
+            &.active > a {
+                box-shadow: none;
+            }
+
+            // Hover Background Color for menu item and SideMenu
+            &:not(.nested-active):hover > a,
+            &:not(.active):hover > a,
+            &:hover > a {
+                color: white;
+                background-color: #383B44;
+            }
+        }
+
+        // ============ Main Menu ===========
+        > li {
+			&:hover:not(.nested-active):not(.active) {
+				> a {
+					color: #555555;
+					background: #383B44;
+					box-shadow: 0px -1px 0px 0px #383B44 inset;
+				}
+
+				> a > i:first-child {
+					color: white;
+				}
+			}
+        }
+
+        // ============ Sub Menus ===========
+        li > ul {
+            border-color: #383B44;
+            background-color: #383B44;
+            box-shadow: 14px 4px 20px 3px rgba(0,0,0,0.1);
+            > li {
+                border-color: transparent;
+
+				> a {
+					border-color: #383B44;
+				}
+            }
+
+            > li:hover > a {
+                color: white;
+                background-color: #383B44;
+                box-shadow: none;
+            }
+
+            > li.nested-active > a,
+            > li.active > a {
+                color: white;
+                background-color: #383B44;
+                box-shadow: none;
+            }
+        }
+	}
+}
+
+
+    &.sidebar-big-icons .navigation .sidebar {
+        .sidebar-content .side-menu {
+            // =========== All Menus ==============
+            li {
+                &.active > a {
+                    color: khaki;
+                }
+            }
+
+            // ============ Main Menu ===========
+            > li {
+                &:hover:not(.active):not(.nested-active) > a {
+                    box-shadow: 0 -1px 0 0 #383B44 inset;
+                    background: #383B44;
+                    color: white;
+
+                    > i:first-child {
+                        color: white;
+                    }
+                }
+            }
+
+            // ============ Sub Menus ===========
+            li > ul {
+                background-color: #383B44;
+                border-color: #383B44;
+
+                > li {
+                    > a {
+                        box-shadow: none;
+                        border: none;
+                    }
+
+                    &.nested-active > a,
+                    &.active > a {
+                        background: none;
+                        box-shadow: none;
+                    }
+
+                    &.active > a {
+                        color: white;
+                    }
+
+                    &:hover:not(.active):not(.nested-active) > a {
+                        background: none;
+                    }
+                }
+
+                // Sub Menu Top Title
+                &:before {
+                    color: white;
+                    border-color: RGBA(255, 255, 255, 0.2);
+                }
+            }
+        }
+    }
+
+
+}
+
+// SIDEBAR-DARK-WARNING
+.sidebar-dark-warning {
+
+    .main-wrap {
+        background-color: #3A4150;
+    }
+
+    .navigation .sidebar {
+        background: linear-gradient(-180deg, #27282E 0%, #3A4150 100%);
+        color: rgba(255, 255, 255, 0.5); // Regular Text
+        box-shadow: 0px -15px 20px 3px rgba(0,0,0,0.1);
+
+        // ========= TEXT-MUTED ===============
+        .text-muted {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        hr {
+            border-top-color: rgba(255, 255, 255, 0.1);
+        }
+
+        // ======= Avatar Addons=========
+        .add-on-container,
+        .avatar-container {
+            border-right: none;
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .sidebar-overlay-head {
+            border-color: rgba(255, 255, 255, 0.1);
+            border-width: 0 0 1px 0;
+
+            .sidebar-switch {
+                color: #555;
+            }
+        }
+        .sidebar-logo {
+            border-right: none;
+            border-bottom-color: rgba(255, 255, 255, 0.2);
+            background: white;
+        }
+
+        // ============ MENU ==================
+        .sidebar-content .side-menu {
+            // ========== All Menus ===========
+            // General LI settings
+            li {
+                // General A settings
+                border-right: none;
+
+                a {
+                    color: rgba(255, 255, 255, 0.4);        // FONT Main Color
+
+                    // Hover Link
+                    &:hover {
+                        color: yellow;
+                        background: #F1F1F1;
+                    }
+                }
+
+                // General hover A settings
+                > a:hover {
+                    color: rgba(255, 255, 255, 1);
+                    background: rgba(255, 255, 255, 0.3);
+                }
+
+                // General active A settings
+                &.active > a {
+                    background: rgba(255, 255, 255, 0.3);
+                    color: #555555;
+                }
+            }
+
+            // ========= Main Menus ===========
+            > li {
+                // General A settings
+                > a {
+                    border-right: 0px solid $brand-warning;
+
+                    // General Icon Settings
+                    > i:first-child {
+                        color: rgba(255, 255, 255, 0.2);
+                    }
+                }
+
+                > a:hover {
+                    color: white;
+                    background: #383B44;
+                    box-shadow: 0px -1px 0px 0px #383B44 inset;
+                }
+
+                // Active A settings
+                &.nested-active:not(.expanded) > a,
+                &.active > a {
+                    //Accent (switch to none if disabled)
+                    box-shadow: 3px 0px 0px 0px $brand-warning inset, 0px -1px 0px 0px #383B44 inset;
+                    background: #383B44;
+                    color: white;
+
+                    // Active Icon Color
+                    > i:first-child {
+                        color: white;
+                    }
+                }
+            }
+
+            // ========== Sub Menus =============
+            > li ul > li {
+                > a {
+                    // Sub Menu A General Settings
+                    border-right: 0px solid $brand-warning;
+                }
+
+                > a:hover {
+                    color: white;
+                    background: #383B44;
+                    box-shadow: 0px -1px 0px 0px #383B44 inset;
+                }
+
+                // Submenu Active A settings
+                &.nested-active:not(.expanded) > a,
+                &.active > a {
+                    //Accent (switch to none if disabled)
+                    box-shadow: 3px 0px 0px 0px $brand-warning inset, 0px -1px 0px 0px #383B44 inset;
+                    background: #383B44;
+                    color: white;
+
+                    // Active Icon Color
+                    > i:first-child {
+                        color: wheat;
+                    }
+                }
+            }
+        }
+    }
+
+    // Sidebar-Info Slim
+    &.sidebar-slim .navigation .sidebar {
+	.sidebar-content .side-menu {
+        // =========== All Menus ===========
+        li {
+            &.active > a {
+                box-shadow: none;
+            }
+
+            // Hover Background Color for menu item and SideMenu
+            &:not(.nested-active):hover > a,
+            &:not(.active):hover > a,
+            &:hover > a {
+                color: white;
+                background-color: #383B44;
+            }
+        }
+
+        // ============ Main Menu ===========
+        > li {
+			&:hover:not(.nested-active):not(.active) {
+				> a {
+					color: #555555;
+					background: #383B44;
+					box-shadow: 0px -1px 0px 0px #383B44 inset;
+				}
+
+				> a > i:first-child {
+					color: white;
+				}
+			}
+        }
+
+        // ============ Sub Menus ===========
+        li > ul {
+            border-color: #383B44;
+            background-color: #383B44;
+            box-shadow: 14px 4px 20px 3px rgba(0,0,0,0.1);
+            > li {
+                border-color: transparent;
+
+				> a {
+					border-color: #383B44;
+				}
+            }
+
+            > li:hover > a {
+                color: white;
+                background-color: #383B44;
+                box-shadow: none;
+            }
+
+            > li.nested-active > a,
+            > li.active > a {
+                color: white;
+                background-color: #383B44;
+                box-shadow: none;
+            }
+        }
+	}
+}
+
+
+    &.sidebar-big-icons .navigation .sidebar {
+        .sidebar-content .side-menu {
+            // =========== All Menus ==============
+            li {
+                &.active > a {
+                    color: khaki;
+                }
+            }
+
+            // ============ Main Menu ===========
+            > li {
+                &:hover:not(.active):not(.nested-active) > a {
+                    box-shadow: 0 -1px 0 0 #383B44 inset;
+                    background: #383B44;
+                    color: white;
+
+                    > i:first-child {
+                        color: white;
+                    }
+                }
+            }
+
+            // ============ Sub Menus ===========
+            li > ul {
+                background-color: #383B44;
+                border-color: #383B44;
+
+                > li {
+                    > a {
+                        box-shadow: none;
+                        border: none;
+                    }
+
+                    &.nested-active > a,
+                    &.active > a {
+                        background: none;
+                        box-shadow: none;
+                    }
+
+                    &.active > a {
+                        color: white;
+                    }
+
+                    &:hover:not(.active):not(.nested-active) > a {
+                        background: none;
+                    }
+                }
+
+                // Sub Menu Top Title
+                &:before {
+                    color: white;
+                    border-color: RGBA(255, 255, 255, 0.2);
+                }
+            }
+        }
+    }
+
+
+}
+
+// SIDEBAR-DARK-DANGER
+.sidebar-dark-danger {
+
+    .main-wrap {
+        background-color: #3A4150;
+    }
+
+    .navigation .sidebar {
+        background: linear-gradient(-180deg, #27282E 0%, #3A4150 100%);
+        color: rgba(255, 255, 255, 0.5); // Regular Text
+        box-shadow: 0px -15px 20px 3px rgba(0,0,0,0.1);
+
+        // ========= TEXT-MUTED ===============
+        .text-muted {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        hr {
+            border-top-color: rgba(255, 255, 255, 0.1);
+        }
+
+        // ======= Avatar Addons=========
+        .add-on-container,
+        .avatar-container {
+            border-right: none;
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .sidebar-overlay-head {
+            border-color: rgba(255, 255, 255, 0.1);
+            border-width: 0 0 1px 0;
+
+            .sidebar-switch {
+                color: #555;
+            }
+        }
+        .sidebar-logo {
+            border-right: none;
+            border-bottom-color: rgba(255, 255, 255, 0.2);
+            background: white;
+        }
+
+        // ============ MENU ==================
+        .sidebar-content .side-menu {
+            // ========== All Menus ===========
+            // General LI settings
+            li {
+                // General A settings
+                border-right: none;
+
+                a {
+                    color: rgba(255, 255, 255, 0.4);        // FONT Main Color
+
+                    // Hover Link
+                    &:hover {
+                        color: yellow;
+                        background: #F1F1F1;
+                    }
+                }
+
+                // General hover A settings
+                > a:hover {
+                    color: rgba(255, 255, 255, 1);
+                    background: rgba(255, 255, 255, 0.3);
+                }
+
+                // General active A settings
+                &.active > a {
+                    background: rgba(255, 255, 255, 0.3);
+                    color: #555555;
+                }
+            }
+
+            // ========= Main Menus ===========
+            > li {
+                // General A settings
+                > a {
+                    border-right: 0px solid $brand-danger;
+
+                    // General Icon Settings
+                    > i:first-child {
+                        color: rgba(255, 255, 255, 0.2);
+                    }
+                }
+
+                > a:hover {
+                    color: white;
+                    background: #383B44;
+                    box-shadow: 0px -1px 0px 0px #383B44 inset;
+                }
+
+                // Active A settings
+                &.nested-active:not(.expanded) > a,
+                &.active > a {
+                    //Accent (switch to none if disabled)
+                    box-shadow: 3px 0px 0px 0px $brand-danger inset, 0px -1px 0px 0px #383B44 inset;
+                    background: #383B44;
+                    color: white;
+
+                    // Active Icon Color
+                    > i:first-child {
+                        color: white;
+                    }
+                }
+            }
+
+            // ========== Sub Menus =============
+            > li ul > li {
+                > a {
+                    // Sub Menu A General Settings
+                    border-right: 0px solid $brand-danger;
+                }
+
+                > a:hover {
+                    color: white;
+                    background: #383B44;
+                    box-shadow: 0px -1px 0px 0px #383B44 inset;
+                }
+
+                // Submenu Active A settings
+                &.nested-active:not(.expanded) > a,
+                &.active > a {
+                    //Accent (switch to none if disabled)
+                    box-shadow: 3px 0px 0px 0px $brand-danger inset, 0px -1px 0px 0px #383B44 inset;
+                    background: #383B44;
+                    color: white;
+
+                    // Active Icon Color
+                    > i:first-child {
+                        color: wheat;
+                    }
+                }
+            }
+        }
+    }
+
+    // Sidebar-Info Slim
+    &.sidebar-slim .navigation .sidebar {
+	.sidebar-content .side-menu {
+        // =========== All Menus ===========
+        li {
+            &.active > a {
+                box-shadow: none;
+            }
+
+            // Hover Background Color for menu item and SideMenu
+            &:not(.nested-active):hover > a,
+            &:not(.active):hover > a,
+            &:hover > a {
+                color: white;
+                background-color: #383B44;
+            }
+        }
+
+        // ============ Main Menu ===========
+        > li {
+			&:hover:not(.nested-active):not(.active) {
+				> a {
+					color: #555555;
+					background: #383B44;
+					box-shadow: 0px -1px 0px 0px #383B44 inset;
+				}
+
+				> a > i:first-child {
+					color: white;
+				}
+			}
+        }
+
+        // ============ Sub Menus ===========
+        li > ul {
+            border-color: #383B44;
+            background-color: #383B44;
+            box-shadow: 14px 4px 20px 3px rgba(0,0,0,0.1);
+            > li {
+                border-color: transparent;
+
+				> a {
+					border-color: #383B44;
+				}
+            }
+
+            > li:hover > a {
+                color: white;
+                background-color: #383B44;
+                box-shadow: none;
+            }
+
+            > li.nested-active > a,
+            > li.active > a {
+                color: white;
+                background-color: #383B44;
+                box-shadow: none;
+            }
+        }
+	}
+}
+
+
+    &.sidebar-big-icons .navigation .sidebar {
+        .sidebar-content .side-menu {
+            // =========== All Menus ==============
+            li {
+                &.active > a {
+                    color: khaki;
+                }
+            }
+
+            // ============ Main Menu ===========
+            > li {
+                &:hover:not(.active):not(.nested-active) > a {
+                    box-shadow: 0 -1px 0 0 #383B44 inset;
+                    background: #383B44;
+                    color: white;
+
+                    > i:first-child {
+                        color: white;
+                    }
+                }
+            }
+
+            // ============ Sub Menus ===========
+            li > ul {
+                background-color: #383B44;
+                border-color: #383B44;
+
+                > li {
+                    > a {
+                        box-shadow: none;
+                        border: none;
+                    }
+
+                    &.nested-active > a,
+                    &.active > a {
+                        background: none;
+                        box-shadow: none;
+                    }
+
+                    &.active > a {
+                        color: white;
+                    }
+
+                    &:hover:not(.active):not(.nested-active) > a {
+                        background: none;
+                    }
+                }
+
+                // Sub Menu Top Title
+                &:before {
+                    color: white;
+                    border-color: RGBA(255, 255, 255, 0.2);
+                }
+            }
+        }
+    }
+
+
+}
+
+// SIDEBAR-DARK-SOFT-PURPLE
+.sidebar-dark-softpurple {
+
+    .main-wrap {
+        background-color: #3A4150;
+    }
+
+    .navigation .sidebar {
+        background: linear-gradient(-180deg, #27282E 0%, #3A4150 100%);
+        color: rgba(255, 255, 255, 0.5); // Regular Text
+        box-shadow: 0px -15px 20px 3px rgba(0,0,0,0.1);
+
+        // ========= TEXT-MUTED ===============
+        .text-muted {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        hr {
+            border-top-color: rgba(255, 255, 255, 0.1);
+        }
+
+        // ======= Avatar Addons=========
+        .add-on-container,
+        .avatar-container {
+            border-right: none;
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .sidebar-overlay-head {
+            border-color: rgba(255, 255, 255, 0.1);
+            border-width: 0 0 1px 0;
+
+            .sidebar-switch {
+                color: #555;
+            }
+        }
+        .sidebar-logo {
+            border-right: none;
+            border-bottom-color: rgba(255, 255, 255, 0.2);
+            background: white;
+        }
+
+        // ============ MENU ==================
+        .sidebar-content .side-menu {
+            // ========== All Menus ===========
+            // General LI settings
+            li {
+                // General A settings
+                border-right: none;
+
+                a {
+                    color: rgba(255, 255, 255, 0.4);        // FONT Main Color
+
+                    // Hover Link
+                    &:hover {
+                        color: yellow;
+                        background: #F1F1F1;
+                    }
+                }
+
+                // General hover A settings
+                > a:hover {
+                    color: rgba(255, 255, 255, 1);
+                    background: rgba(255, 255, 255, 0.3);
+                }
+
+                // General active A settings
+                &.active > a {
+                    background: rgba(255, 255, 255, 0.3);
+                    color: #555555;
+                }
+            }
+
+            // ========= Main Menus ===========
+            > li {
+                // General A settings
+                > a {
+                    border-right: 0px solid $brand-soft-purple;
+
+                    // General Icon Settings
+                    > i:first-child {
+                        color: rgba(255, 255, 255, 0.2);
+                    }
+                }
+
+                > a:hover {
+                    color: white;
+                    background: #383B44;
+                    box-shadow: 0px -1px 0px 0px #383B44 inset;
+                }
+
+                // Active A settings
+                &.nested-active:not(.expanded) > a,
+                &.active > a {
+                    //Accent (switch to none if disabled)
+                    box-shadow: 3px 0px 0px 0px $brand-soft-purple inset, 0px -1px 0px 0px #383B44 inset;
+                    background: #383B44;
+                    color: white;
+
+                    // Active Icon Color
+                    > i:first-child {
+                        color: white;
+                    }
+                }
+            }
+
+            // ========== Sub Menus =============
+            > li ul > li {
+                > a {
+                    // Sub Menu A General Settings
+                    border-right: 0px solid $brand-soft-purple;
+                }
+
+                > a:hover {
+                    color: white;
+                    background: #383B44;
+                    box-shadow: 0px -1px 0px 0px #383B44 inset;
+                }
+
+                // Submenu Active A settings
+                &.nested-active:not(.expanded) > a,
+                &.active > a {
+                    //Accent (switch to none if disabled)
+                    box-shadow: 3px 0px 0px 0px $brand-soft-purple inset, 0px -1px 0px 0px #383B44 inset;
+                    background: #383B44;
+                    color: white;
+
+                    // Active Icon Color
+                    > i:first-child {
+                        color: wheat;
+                    }
+                }
+            }
+        }
+    }
+
+    // Sidebar-Info Slim
+    &.sidebar-slim .navigation .sidebar {
+	.sidebar-content .side-menu {
+        // =========== All Menus ===========
+        li {
+            &.active > a {
+                box-shadow: none;
+            }
+
+            // Hover Background Color for menu item and SideMenu
+            &:not(.nested-active):hover > a,
+            &:not(.active):hover > a,
+            &:hover > a {
+                color: white;
+                background-color: #383B44;
+            }
+        }
+
+        // ============ Main Menu ===========
+        > li {
+			&:hover:not(.nested-active):not(.active) {
+				> a {
+					color: #555555;
+					background: #383B44;
+					box-shadow: 0px -1px 0px 0px #383B44 inset;
+				}
+
+				> a > i:first-child {
+					color: white;
+				}
+			}
+        }
+
+        // ============ Sub Menus ===========
+        li > ul {
+            border-color: #383B44;
+            background-color: #383B44;
+            box-shadow: 14px 4px 20px 3px rgba(0,0,0,0.1);
+            > li {
+                border-color: transparent;
+
+				> a {
+					border-color: #383B44;
+				}
+            }
+
+            > li:hover > a {
+                color: white;
+                background-color: #383B44;
+                box-shadow: none;
+            }
+
+            > li.nested-active > a,
+            > li.active > a {
+                color: white;
+                background-color: #383B44;
+                box-shadow: none;
+            }
+        }
+	}
+}
+
+
+    &.sidebar-big-icons .navigation .sidebar {
+        .sidebar-content .side-menu {
+            // =========== All Menus ==============
+            li {
+                &.active > a {
+                    color: khaki;
+                }
+            }
+
+            // ============ Main Menu ===========
+            > li {
+                &:hover:not(.active):not(.nested-active) > a {
+                    box-shadow: 0 -1px 0 0 #383B44 inset;
+                    background: #383B44;
+                    color: white;
+
+                    > i:first-child {
+                        color: white;
+                    }
+                }
+            }
+
+            // ============ Sub Menus ===========
+            li > ul {
+                background-color: #383B44;
+                border-color: #383B44;
+
+                > li {
+                    > a {
+                        box-shadow: none;
+                        border: none;
+                    }
+
+                    &.nested-active > a,
+                    &.active > a {
+                        background: none;
+                        box-shadow: none;
+                    }
+
+                    &.active > a {
+                        color: white;
+                    }
+
+                    &:hover:not(.active):not(.nested-active) > a {
+                        background: none;
+                    }
+                }
+
+                // Sub Menu Top Title
+                &:before {
+                    color: white;
+                    border-color: RGBA(255, 255, 255, 0.2);
+                }
+            }
+        }
+    }
+
+
+}
+
+// SIDEBAR-DARK-LIGHTING-YELLOW
+.sidebar-dark-lightingyellow {
+
+    .main-wrap {
+        background-color: #3A4150;
+    }
+
+    .navigation .sidebar {
+        background: linear-gradient(-180deg, #27282E 0%, #3A4150 100%);
+        color: rgba(255, 255, 255, 0.5); // Regular Text
+        box-shadow: 0px -15px 20px 3px rgba(0,0,0,0.1);
+
+        // ========= TEXT-MUTED ===============
+        .text-muted {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        hr {
+            border-top-color: rgba(255, 255, 255, 0.1);
+        }
+
+        // ======= Avatar Addons=========
+        .add-on-container,
+        .avatar-container {
+            border-right: none;
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .sidebar-overlay-head {
+            border-color: rgba(255, 255, 255, 0.1);
+            border-width: 0 0 1px 0;
+
+            .sidebar-switch {
+                color: #555;
+            }
+        }
+        .sidebar-logo {
+            border-right: none;
+            border-bottom-color: rgba(255, 255, 255, 0.2);
+            background: white;
+        }
+
+        // ============ MENU ==================
+        .sidebar-content .side-menu {
+            // ========== All Menus ===========
+            // General LI settings
+            li {
+                // General A settings
+                border-right: none;
+
+                a {
+                    color: rgba(255, 255, 255, 0.4);        // FONT Main Color
+
+                    // Hover Link
+                    &:hover {
+                        color: yellow;
+                        background: #F1F1F1;
+                    }
+                }
+
+                // General hover A settings
+                > a:hover {
+                    color: rgba(255, 255, 255, 1);
+                    background: rgba(255, 255, 255, 0.3);
+                }
+
+                // General active A settings
+                &.active > a {
+                    background: rgba(255, 255, 255, 0.3);
+                    color: #555555;
+                }
+            }
+
+            // ========= Main Menus ===========
+            > li {
+                // General A settings
+                > a {
+                    border-right: 0px solid $brand-lighting-yellow;
+
+                    // General Icon Settings
+                    > i:first-child {
+                        color: rgba(255, 255, 255, 0.2);
+                    }
+                }
+
+                > a:hover {
+                    color: white;
+                    background: #383B44;
+                    box-shadow: 0px -1px 0px 0px #383B44 inset;
+                }
+
+                // Active A settings
+                &.nested-active:not(.expanded) > a,
+                &.active > a {
+                    //Accent (switch to none if disabled)
+                    box-shadow: 3px 0px 0px 0px $brand-lighting-yellow inset, 0px -1px 0px 0px #383B44 inset;
+                    background: #383B44;
+                    color: white;
+
+                    // Active Icon Color
+                    > i:first-child {
+                        color: white;
+                    }
+                }
+            }
+
+            // ========== Sub Menus =============
+            > li ul > li {
+                > a {
+                    // Sub Menu A General Settings
+                    border-right: 0px solid $brand-lighting-yellow;
+                }
+
+                > a:hover {
+                    color: white;
+                    background: #383B44;
+                    box-shadow: 0px -1px 0px 0px #383B44 inset;
+                }
+
+                // Submenu Active A settings
+                &.nested-active:not(.expanded) > a,
+                &.active > a {
+                    //Accent (switch to none if disabled)
+                    box-shadow: 3px 0px 0px 0px $brand-lighting-yellow inset, 0px -1px 0px 0px #383B44 inset;
+                    background: #383B44;
+                    color: white;
+
+                    // Active Icon Color
+                    > i:first-child {
+                        color: wheat;
+                    }
+                }
+            }
+        }
+    }
+
+    // Sidebar-Info Slim
+    &.sidebar-slim .navigation .sidebar {
+	.sidebar-content .side-menu {
+        // =========== All Menus ===========
+        li {
+            &.active > a {
+                box-shadow: none;
+            }
+
+            // Hover Background Color for menu item and SideMenu
+            &:not(.nested-active):hover > a,
+            &:not(.active):hover > a,
+            &:hover > a {
+                color: white;
+                background-color: #383B44;
+            }
+        }
+
+        // ============ Main Menu ===========
+        > li {
+			&:hover:not(.nested-active):not(.active) {
+				> a {
+					color: #555555;
+					background: #383B44;
+					box-shadow: 0px -1px 0px 0px #383B44 inset;
+				}
+
+				> a > i:first-child {
+					color: white;
+				}
+			}
+        }
+
+        // ============ Sub Menus ===========
+        li > ul {
+            border-color: #383B44;
+            background-color: #383B44;
+            box-shadow: 14px 4px 20px 3px rgba(0,0,0,0.1);
+            > li {
+                border-color: transparent;
+
+				> a {
+					border-color: #383B44;
+				}
+            }
+
+            > li:hover > a {
+                color: white;
+                background-color: #383B44;
+                box-shadow: none;
+            }
+
+            > li.nested-active > a,
+            > li.active > a {
+                color: white;
+                background-color: #383B44;
+                box-shadow: none;
+            }
+        }
+	}
+}
+
+
+    &.sidebar-big-icons .navigation .sidebar {
+        .sidebar-content .side-menu {
+            // =========== All Menus ==============
+            li {
+                &.active > a {
+                    color: khaki;
+                }
+            }
+
+            // ============ Main Menu ===========
+            > li {
+                &:hover:not(.active):not(.nested-active) > a {
+                    box-shadow: 0 -1px 0 0 #383B44 inset;
+                    background: #383B44;
+                    color: white;
+
+                    > i:first-child {
+                        color: white;
+                    }
+                }
+            }
+
+            // ============ Sub Menus ===========
+            li > ul {
+                background-color: #383B44;
+                border-color: #383B44;
+
+                > li {
+                    > a {
+                        box-shadow: none;
+                        border: none;
+                    }
+
+                    &.nested-active > a,
+                    &.active > a {
+                        background: none;
+                        box-shadow: none;
+                    }
+
+                    &.active > a {
+                        color: white;
+                    }
+
+                    &:hover:not(.active):not(.nested-active) > a {
+                        background: none;
+                    }
+                }
+
+                // Sub Menu Top Title
+                &:before {
+                    color: white;
+                    border-color: RGBA(255, 255, 255, 0.2);
+                }
+            }
+        }
+    }
+
+
+}
+
+
+
+
+// SIDEBAR-LIGHT-PRIMARY
+.sidebar-light-primary {
+
+    .main-wrap {
+        background-color: white;
+    }
+
+    .navigation .sidebar {
+        background: white;
+        color: rgba(255, 255, 255, 0.5); // Regular Text
+        box-shadow: 0px -15px 20px 3px rgba(0,0,0,0.1);
+
+        // ========= TEXT-MUTED ===============
+        .text-muted {
+            color: RGBA(10, 10, 10, 0.3);
+        }
+
+        hr {
+            border-top-color: RGBA(10, 10, 10, 0.1);
+        }
+
+        // ======= Avatar Addons=========
+        .add-on-container,
+        .avatar-container {
+            border-right: none;
+            border-color: RGBA(10, 10, 10, 0.1);
+        }
+
+        .sidebar-overlay-head {
+            border-color: RGBA(10, 10, 10, 0.1);
+            border-width: 0 0 1px 0;
+
+            .sidebar-switch {
+                color: #555;
+            }
+        }
+        .sidebar-logo {
+            border-right: none;
+            border-bottom-color: RGBA(10, 10, 10, 0.1);
+            background: white;
+        }
+
+        // ============ MENU ==================
+        .sidebar-content .side-menu {
+            // ========== All Menus ===========
+            // General LI settings
+            li {
+                // General A settings
+                border-right: none;
+
+                a {
+                    color: RGBA(10, 10, 10, 0.4);        // FONT Main Color
+                    font-weight: 600;
+
+                    // Hover Link
+                    &:hover {
+                        color: yellow;
+                        background: #F1F1F1;
+                    }
+                }
+
+                // General hover A settings
+                > a:hover {
+                    color: RGBA(10, 10, 10, 1.0);
+                    background: RGBA(243, 244, 246, 1.0);
+                }
+
+                // General active A settings
+                &.active > a {
+                    background: RGBA(243, 244, 246, 1.0);
+                    color: #555555;
+                }
+            }
+
+            // ========= Main Menus ===========
+            > li {
+                // General A settings
+                > a {
+                    border-right: 0px solid $brand-primary;
+
+                    // General Icon Settings
+                    > i:first-child {
+                        color: RGBA(10, 10, 10, 0.2);
+                    }
+                }
+
+                > a:hover {
+                    color: RGBA(10, 10, 10, 1.0);
+                    background: #F3F4F6;
+                    box-shadow: 0px -1px 0px 0px #F3F4F6 inset;
+                }
+
+                // Active A settings
+                &.nested-active:not(.expanded) > a,
+                &.active > a {
+                    //Accent (switch to none if disabled)
+                    box-shadow: 3px 0px 0px 0px $brand-primary inset, 0px -1px 0px 0px #F3F4F6 inset;
+                    background: #F3F4F6;
+                    color: RGBA(10, 10, 10, 1.0);
+
+                    // Active Icon Color
+                    > i:first-child {
+                        color: RGBA(10, 10, 10, 0.6);
+                    }
+                }
+            }
+
+            // ========== Sub Menus =============
+            > li ul > li {
+                > a {
+                    // Sub Menu A General Settings
+                    border-right: 0px solid $brand-primary;
+                }
+
+                > a:hover {
+                    color: RGBA(10, 10, 10, 1.0);
+                    background: #F3F4F6;
+                    box-shadow: 0px -1px 0px 0px #F3F4F6 inset;
+                }
+
+                // Submenu Active A settings
+                &.nested-active:not(.expanded) > a,
+                &.active > a {
+                    //Accent (switch to none if disabled)
+                    box-shadow: 3px 0px 0px 0px $brand-primary inset, 0px -1px 0px 0px #F3F4F6 inset;
+                    background: #F3F4F6;
+                    color: RGBA(10, 10, 10, 1.0);
+
+                    // Active Icon Color
+                    > i:first-child {
+                        color: wheat;
+                    }
+                }
+            }
+        }
+    }
+
+    // Sidebar-Info Slim
+    &.sidebar-slim .navigation .sidebar {
+	.sidebar-content .side-menu {
+        // =========== All Menus ===========
+        li {
+            &.active > a {
+                box-shadow: none;
+            }
+
+            // Hover Background Color for menu item and SideMenu
+            &:not(.nested-active):hover > a,
+            &:not(.active):hover > a,
+            &:hover > a {
+                color: RGBA(10, 10, 10, 1.0);
+                background-color: #F3F4F6;
+            }
+        }
+
+        // ============ Main Menu ===========
+        > li {
+			&:hover:not(.nested-active):not(.active) {
+				> a {
+					color: RGBA(10, 10, 10, 1.0);
+					background: #F3F4F6;
+					box-shadow: 0px -1px 0px 0px #F3F4F6 inset;
+				}
+
+				> a > i:first-child {
+					color: RGBA(10, 10, 10, 1.0);
+				}
+			}
+        }
+
+        // ============ Sub Menus ===========
+        li > ul {
+            border-color: #F3F4F6;
+            background-color: #F3F4F6;
+            box-shadow: 14px 4px 20px 3px rgba(0,0,0,0.1);
+            > li {
+                border-color: transparent;
+
+				> a {
+					border-color: #F3F4F6;
+				}
+            }
+
+            > li:hover > a {
+                color: RGBA(10, 10, 10, 1.0);
+                background-color: #F3F4F6;
+                box-shadow: none;
+            }
+
+            > li.nested-active > a,
+            > li.active > a {
+                color: RGBA(10, 10, 10, 1.0);
+                background-color: #F3F4F6;
+                box-shadow: none;
+            }
+        }
+	}
+}
+
+
+    &.sidebar-big-icons .navigation .sidebar {
+        .sidebar-content .side-menu {
+            // =========== All Menus ==============
+            li {
+                &.active > a {
+                    color: khaki;
+                }
+            }
+
+            // ============ Main Menu ===========
+            > li {
+                &:hover:not(.active):not(.nested-active) > a {
+                    box-shadow: 0 -1px 0 0 #F3F4F6 inset;
+                    background: #F3F4F6;
+                    color: RGBA(10, 10, 10, 1.0);
+
+                    > i:first-child {
+                        color: RGBA(10, 10, 10, 1.0);
+                    }
+                }
+            }
+
+            // ============ Sub Menus ===========
+            li > ul {
+                background-color: #F3F4F6;
+                border-color: #F3F4F6;
+
+                > li {
+                    > a {
+                        box-shadow: none;
+                        border: none;
+                    }
+
+                    &.nested-active > a,
+                    &.active > a {
+                        background: none;
+                        box-shadow: none;
+                    }
+
+                    &.active > a {
+                        color: RGBA(10, 10, 10, 1.0);
+                    }
+
+                    &:hover:not(.active):not(.nested-active) > a {
+                        background: none;
+                    }
+                }
+
+                // Sub Menu Top Title
+                &:before {
+                    color: RGBA(10, 10, 10, 1.0);
+                    border-color: RGBA(10, 10, 10, 0.1);
+                }
+            }
+        }
+    }
+
+}
+
+// SIDEBAR-LIGHT-INFO
+.sidebar-light-info {
+
+    .main-wrap {
+        background-color: white;
+    }
+
+    .navigation .sidebar {
+        background: white;
+        color: rgba(255, 255, 255, 0.5); // Regular Text
+        box-shadow: 0px -15px 20px 3px rgba(0,0,0,0.1);
+
+        // ========= TEXT-MUTED ===============
+        .text-muted {
+            color: RGBA(10, 10, 10, 0.3);
+        }
+
+        hr {
+            border-top-color: RGBA(10, 10, 10, 0.1);
+        }
+
+        // ======= Avatar Addons=========
+        .add-on-container,
+        .avatar-container {
+            border-right: none;
+            border-color: RGBA(10, 10, 10, 0.1);
+        }
+
+        .sidebar-overlay-head {
+            border-color: RGBA(10, 10, 10, 0.1);
+            border-width: 0 0 1px 0;
+
+            .sidebar-switch {
+                color: #555;
+            }
+        }
+        .sidebar-logo {
+            border-right: none;
+            border-bottom-color: RGBA(10, 10, 10, 0.1);
+            background: white;
+        }
+
+        // ============ MENU ==================
+        .sidebar-content .side-menu {
+            // ========== All Menus ===========
+            // General LI settings
+            li {
+                // General A settings
+                border-right: none;
+
+                a {
+                    color: RGBA(10, 10, 10, 0.4);        // FONT Main Color
+                    font-weight: 600;
+
+                    // Hover Link
+                    &:hover {
+                        color: yellow;
+                        background: #F1F1F1;
+                    }
+                }
+
+                // General hover A settings
+                > a:hover {
+                    color: RGBA(10, 10, 10, 1.0);
+                    background: RGBA(243, 244, 246, 1.0);
+                }
+
+                // General active A settings
+                &.active > a {
+                    background: RGBA(243, 244, 246, 1.0);
+                    color: #555555;
+                }
+            }
+
+            // ========= Main Menus ===========
+            > li {
+                // General A settings
+                > a {
+                    border-right: 0px solid $brand-info;
+
+                    // General Icon Settings
+                    > i:first-child {
+                        color: RGBA(10, 10, 10, 0.2);
+                    }
+                }
+
+                > a:hover {
+                    color: RGBA(10, 10, 10, 1.0);
+                    background: #F3F4F6;
+                    box-shadow: 0px -1px 0px 0px #F3F4F6 inset;
+                }
+
+                // Active A settings
+                &.nested-active:not(.expanded) > a,
+                &.active > a {
+                    //Accent (switch to none if disabled)
+                    box-shadow: 3px 0px 0px 0px $brand-info inset, 0px -1px 0px 0px #F3F4F6 inset;
+                    background: #F3F4F6;
+                    color: RGBA(10, 10, 10, 1.0);
+
+                    // Active Icon Color
+                    > i:first-child {
+                        color: RGBA(10, 10, 10, 0.6);
+                    }
+                }
+            }
+
+            // ========== Sub Menus =============
+            > li ul > li {
+                > a {
+                    // Sub Menu A General Settings
+                    border-right: 0px solid $brand-info;
+                }
+
+                > a:hover {
+                    color: RGBA(10, 10, 10, 1.0);
+                    background: #F3F4F6;
+                    box-shadow: 0px -1px 0px 0px #F3F4F6 inset;
+                }
+
+                // Submenu Active A settings
+                &.nested-active:not(.expanded) > a,
+                &.active > a {
+                    //Accent (switch to none if disabled)
+                    box-shadow: 3px 0px 0px 0px $brand-info inset, 0px -1px 0px 0px #F3F4F6 inset;
+                    background: #F3F4F6;
+                    color: RGBA(10, 10, 10, 1.0);
+
+                    // Active Icon Color
+                    > i:first-child {
+                        color: wheat;
+                    }
+                }
+            }
+        }
+    }
+
+    // Sidebar-Info Slim
+    &.sidebar-slim .navigation .sidebar {
+	.sidebar-content .side-menu {
+        // =========== All Menus ===========
+        li {
+            &.active > a {
+                box-shadow: none;
+            }
+
+            // Hover Background Color for menu item and SideMenu
+            &:not(.nested-active):hover > a,
+            &:not(.active):hover > a,
+            &:hover > a {
+                color: RGBA(10, 10, 10, 1.0);
+                background-color: #F3F4F6;
+            }
+        }
+
+        // ============ Main Menu ===========
+        > li {
+			&:hover:not(.nested-active):not(.active) {
+				> a {
+					color: RGBA(10, 10, 10, 1.0);
+					background: #F3F4F6;
+					box-shadow: 0px -1px 0px 0px #F3F4F6 inset;
+				}
+
+				> a > i:first-child {
+					color: RGBA(10, 10, 10, 1.0);
+				}
+			}
+        }
+
+        // ============ Sub Menus ===========
+        li > ul {
+            border-color: #F3F4F6;
+            background-color: #F3F4F6;
+            box-shadow: 14px 4px 20px 3px rgba(0,0,0,0.1);
+            > li {
+                border-color: transparent;
+
+				> a {
+					border-color: #F3F4F6;
+				}
+            }
+
+            > li:hover > a {
+                color: RGBA(10, 10, 10, 1.0);
+                background-color: #F3F4F6;
+                box-shadow: none;
+            }
+
+            > li.nested-active > a,
+            > li.active > a {
+                color: RGBA(10, 10, 10, 1.0);
+                background-color: #F3F4F6;
+                box-shadow: none;
+            }
+        }
+	}
+}
+
+
+    &.sidebar-big-icons .navigation .sidebar {
+        .sidebar-content .side-menu {
+            // =========== All Menus ==============
+            li {
+                &.active > a {
+                    color: khaki;
+                }
+            }
+
+            // ============ Main Menu ===========
+            > li {
+                &:hover:not(.active):not(.nested-active) > a {
+                    box-shadow: 0 -1px 0 0 #F3F4F6 inset;
+                    background: #F3F4F6;
+                    color: RGBA(10, 10, 10, 1.0);
+
+                    > i:first-child {
+                        color: RGBA(10, 10, 10, 1.0);
+                    }
+                }
+            }
+
+            // ============ Sub Menus ===========
+            li > ul {
+                background-color: #F3F4F6;
+                border-color: #F3F4F6;
+
+                > li {
+                    > a {
+                        box-shadow: none;
+                        border: none;
+                    }
+
+                    &.nested-active > a,
+                    &.active > a {
+                        background: none;
+                        box-shadow: none;
+                    }
+
+                    &.active > a {
+                        color: RGBA(10, 10, 10, 1.0);
+                    }
+
+                    &:hover:not(.active):not(.nested-active) > a {
+                        background: none;
+                    }
+                }
+
+                // Sub Menu Top Title
+                &:before {
+                    color: RGBA(10, 10, 10, 1.0);
+                    border-color: RGBA(10, 10, 10, 0.1);
+                }
+            }
+        }
+    }
+
+}
+
+// SIDEBAR-LIGHT-SUCCESS
+.sidebar-light-success {
+
+    .main-wrap {
+        background-color: white;
+    }
+
+    .navigation .sidebar {
+        background: white;
+        color: rgba(255, 255, 255, 0.5); // Regular Text
+        box-shadow: 0px -15px 20px 3px rgba(0,0,0,0.1);
+
+        // ========= TEXT-MUTED ===============
+        .text-muted {
+            color: RGBA(10, 10, 10, 0.3);
+        }
+
+        hr {
+            border-top-color: RGBA(10, 10, 10, 0.1);
+        }
+
+        // ======= Avatar Addons=========
+        .add-on-container,
+        .avatar-container {
+            border-right: none;
+            border-color: RGBA(10, 10, 10, 0.1);
+        }
+
+        .sidebar-overlay-head {
+            border-color: RGBA(10, 10, 10, 0.1);
+            border-width: 0 0 1px 0;
+
+            .sidebar-switch {
+                color: #555;
+            }
+        }
+        .sidebar-logo {
+            border-right: none;
+            border-bottom-color: RGBA(10, 10, 10, 0.1);
+            background: white;
+        }
+
+        // ============ MENU ==================
+        .sidebar-content .side-menu {
+            // ========== All Menus ===========
+            // General LI settings
+            li {
+                // General A settings
+                border-right: none;
+
+                a {
+                    color: RGBA(10, 10, 10, 0.4);        // FONT Main Color
+                    font-weight: 600;
+
+                    // Hover Link
+                    &:hover {
+                        color: yellow;
+                        background: #F1F1F1;
+                    }
+                }
+
+                // General hover A settings
+                > a:hover {
+                    color: RGBA(10, 10, 10, 1.0);
+                    background: RGBA(243, 244, 246, 1.0);
+                }
+
+                // General active A settings
+                &.active > a {
+                    background: RGBA(243, 244, 246, 1.0);
+                    color: #555555;
+                }
+            }
+
+            // ========= Main Menus ===========
+            > li {
+                // General A settings
+                > a {
+                    border-right: 0px solid $brand-success;
+
+                    // General Icon Settings
+                    > i:first-child {
+                        color: RGBA(10, 10, 10, 0.2);
+                    }
+                }
+
+                > a:hover {
+                    color: RGBA(10, 10, 10, 1.0);
+                    background: #F3F4F6;
+                    box-shadow: 0px -1px 0px 0px #F3F4F6 inset;
+                }
+
+                // Active A settings
+                &.nested-active:not(.expanded) > a,
+                &.active > a {
+                    //Accent (switch to none if disabled)
+                    box-shadow: 3px 0px 0px 0px $brand-success inset, 0px -1px 0px 0px #F3F4F6 inset;
+                    background: #F3F4F6;
+                    color: RGBA(10, 10, 10, 1.0);
+
+                    // Active Icon Color
+                    > i:first-child {
+                        color: RGBA(10, 10, 10, 0.6);
+                    }
+                }
+            }
+
+            // ========== Sub Menus =============
+            > li ul > li {
+                > a {
+                    // Sub Menu A General Settings
+                    border-right: 0px solid $brand-success;
+                }
+
+                > a:hover {
+                    color: RGBA(10, 10, 10, 1.0);
+                    background: #F3F4F6;
+                    box-shadow: 0px -1px 0px 0px #F3F4F6 inset;
+                }
+
+                // Submenu Active A settings
+                &.nested-active:not(.expanded) > a,
+                &.active > a {
+                    //Accent (switch to none if disabled)
+                    box-shadow: 3px 0px 0px 0px $brand-success inset, 0px -1px 0px 0px #F3F4F6 inset;
+                    background: #F3F4F6;
+                    color: RGBA(10, 10, 10, 1.0);
+
+                    // Active Icon Color
+                    > i:first-child {
+                        color: wheat;
+                    }
+                }
+            }
+        }
+    }
+
+    // Sidebar-Info Slim
+    &.sidebar-slim .navigation .sidebar {
+	.sidebar-content .side-menu {
+        // =========== All Menus ===========
+        li {
+            &.active > a {
+                box-shadow: none;
+            }
+
+            // Hover Background Color for menu item and SideMenu
+            &:not(.nested-active):hover > a,
+            &:not(.active):hover > a,
+            &:hover > a {
+                color: RGBA(10, 10, 10, 1.0);
+                background-color: #F3F4F6;
+            }
+        }
+
+        // ============ Main Menu ===========
+        > li {
+			&:hover:not(.nested-active):not(.active) {
+				> a {
+					color: RGBA(10, 10, 10, 1.0);
+					background: #F3F4F6;
+					box-shadow: 0px -1px 0px 0px #F3F4F6 inset;
+				}
+
+				> a > i:first-child {
+					color: RGBA(10, 10, 10, 1.0);
+				}
+			}
+        }
+
+        // ============ Sub Menus ===========
+        li > ul {
+            border-color: #F3F4F6;
+            background-color: #F3F4F6;
+            box-shadow: 14px 4px 20px 3px rgba(0,0,0,0.1);
+            > li {
+                border-color: transparent;
+
+				> a {
+					border-color: #F3F4F6;
+				}
+            }
+
+            > li:hover > a {
+                color: RGBA(10, 10, 10, 1.0);
+                background-color: #F3F4F6;
+                box-shadow: none;
+            }
+
+            > li.nested-active > a,
+            > li.active > a {
+                color: RGBA(10, 10, 10, 1.0);
+                background-color: #F3F4F6;
+                box-shadow: none;
+            }
+        }
+	}
+}
+
+
+    &.sidebar-big-icons .navigation .sidebar {
+        .sidebar-content .side-menu {
+            // =========== All Menus ==============
+            li {
+                &.active > a {
+                    color: khaki;
+                }
+            }
+
+            // ============ Main Menu ===========
+            > li {
+                &:hover:not(.active):not(.nested-active) > a {
+                    box-shadow: 0 -1px 0 0 #F3F4F6 inset;
+                    background: #F3F4F6;
+                    color: RGBA(10, 10, 10, 1.0);
+
+                    > i:first-child {
+                        color: RGBA(10, 10, 10, 1.0);
+                    }
+                }
+            }
+
+            // ============ Sub Menus ===========
+            li > ul {
+                background-color: #F3F4F6;
+                border-color: #F3F4F6;
+
+                > li {
+                    > a {
+                        box-shadow: none;
+                        border: none;
+                    }
+
+                    &.nested-active > a,
+                    &.active > a {
+                        background: none;
+                        box-shadow: none;
+                    }
+
+                    &.active > a {
+                        color: RGBA(10, 10, 10, 1.0);
+                    }
+
+                    &:hover:not(.active):not(.nested-active) > a {
+                        background: none;
+                    }
+                }
+
+                // Sub Menu Top Title
+                &:before {
+                    color: RGBA(10, 10, 10, 1.0);
+                    border-color: RGBA(10, 10, 10, 0.1);
+                }
+            }
+        }
+    }
+
+}
+
+// SIDEBAR-LIGHT-WARNING
+.sidebar-light-warning {
+
+    .main-wrap {
+        background-color: white;
+    }
+
+    .navigation .sidebar {
+        background: white;
+        color: rgba(255, 255, 255, 0.5); // Regular Text
+        box-shadow: 0px -15px 20px 3px rgba(0,0,0,0.1);
+
+        // ========= TEXT-MUTED ===============
+        .text-muted {
+            color: RGBA(10, 10, 10, 0.3);
+        }
+
+        hr {
+            border-top-color: RGBA(10, 10, 10, 0.1);
+        }
+
+        // ======= Avatar Addons=========
+        .add-on-container,
+        .avatar-container {
+            border-right: none;
+            border-color: RGBA(10, 10, 10, 0.1);
+        }
+
+        .sidebar-overlay-head {
+            border-color: RGBA(10, 10, 10, 0.1);
+            border-width: 0 0 1px 0;
+
+            .sidebar-switch {
+                color: #555;
+            }
+        }
+        .sidebar-logo {
+            border-right: none;
+            border-bottom-color: RGBA(10, 10, 10, 0.1);
+            background: white;
+        }
+
+        // ============ MENU ==================
+        .sidebar-content .side-menu {
+            // ========== All Menus ===========
+            // General LI settings
+            li {
+                // General A settings
+                border-right: none;
+
+                a {
+                    color: RGBA(10, 10, 10, 0.4);        // FONT Main Color
+                    font-weight: 600;
+
+                    // Hover Link
+                    &:hover {
+                        color: yellow;
+                        background: #F1F1F1;
+                    }
+                }
+
+                // General hover A settings
+                > a:hover {
+                    color: RGBA(10, 10, 10, 1.0);
+                    background: RGBA(243, 244, 246, 1.0);
+                }
+
+                // General active A settings
+                &.active > a {
+                    background: RGBA(243, 244, 246, 1.0);
+                    color: #555555;
+                }
+            }
+
+            // ========= Main Menus ===========
+            > li {
+                // General A settings
+                > a {
+                    border-right: 0px solid $brand-warning;
+
+                    // General Icon Settings
+                    > i:first-child {
+                        color: RGBA(10, 10, 10, 0.2);
+                    }
+                }
+
+                > a:hover {
+                    color: RGBA(10, 10, 10, 1.0);
+                    background: #F3F4F6;
+                    box-shadow: 0px -1px 0px 0px #F3F4F6 inset;
+                }
+
+                // Active A settings
+                &.nested-active:not(.expanded) > a,
+                &.active > a {
+                    //Accent (switch to none if disabled)
+                    box-shadow: 3px 0px 0px 0px $brand-warning inset, 0px -1px 0px 0px #F3F4F6 inset;
+                    background: #F3F4F6;
+                    color: RGBA(10, 10, 10, 1.0);
+
+                    // Active Icon Color
+                    > i:first-child {
+                        color: RGBA(10, 10, 10, 0.6);
+                    }
+                }
+            }
+
+            // ========== Sub Menus =============
+            > li ul > li {
+                > a {
+                    // Sub Menu A General Settings
+                    border-right: 0px solid $brand-warning;
+                }
+
+                > a:hover {
+                    color: RGBA(10, 10, 10, 1.0);
+                    background: #F3F4F6;
+                    box-shadow: 0px -1px 0px 0px #F3F4F6 inset;
+                }
+
+                // Submenu Active A settings
+                &.nested-active:not(.expanded) > a,
+                &.active > a {
+                    //Accent (switch to none if disabled)
+                    box-shadow: 3px 0px 0px 0px $brand-warning inset, 0px -1px 0px 0px #F3F4F6 inset;
+                    background: #F3F4F6;
+                    color: RGBA(10, 10, 10, 1.0);
+
+                    // Active Icon Color
+                    > i:first-child {
+                        color: wheat;
+                    }
+                }
+            }
+        }
+    }
+
+    // Sidebar-Info Slim
+    &.sidebar-slim .navigation .sidebar {
+	.sidebar-content .side-menu {
+        // =========== All Menus ===========
+        li {
+            &.active > a {
+                box-shadow: none;
+            }
+
+            // Hover Background Color for menu item and SideMenu
+            &:not(.nested-active):hover > a,
+            &:not(.active):hover > a,
+            &:hover > a {
+                color: RGBA(10, 10, 10, 1.0);
+                background-color: #F3F4F6;
+            }
+        }
+
+        // ============ Main Menu ===========
+        > li {
+			&:hover:not(.nested-active):not(.active) {
+				> a {
+					color: RGBA(10, 10, 10, 1.0);
+					background: #F3F4F6;
+					box-shadow: 0px -1px 0px 0px #F3F4F6 inset;
+				}
+
+				> a > i:first-child {
+					color: RGBA(10, 10, 10, 1.0);
+				}
+			}
+        }
+
+        // ============ Sub Menus ===========
+        li > ul {
+            border-color: #F3F4F6;
+            background-color: #F3F4F6;
+            box-shadow: 14px 4px 20px 3px rgba(0,0,0,0.1);
+            > li {
+                border-color: transparent;
+
+				> a {
+					border-color: #F3F4F6;
+				}
+            }
+
+            > li:hover > a {
+                color: RGBA(10, 10, 10, 1.0);
+                background-color: #F3F4F6;
+                box-shadow: none;
+            }
+
+            > li.nested-active > a,
+            > li.active > a {
+                color: RGBA(10, 10, 10, 1.0);
+                background-color: #F3F4F6;
+                box-shadow: none;
+            }
+        }
+	}
+}
+
+
+    &.sidebar-big-icons .navigation .sidebar {
+        .sidebar-content .side-menu {
+            // =========== All Menus ==============
+            li {
+                &.active > a {
+                    color: khaki;
+                }
+            }
+
+            // ============ Main Menu ===========
+            > li {
+                &:hover:not(.active):not(.nested-active) > a {
+                    box-shadow: 0 -1px 0 0 #F3F4F6 inset;
+                    background: #F3F4F6;
+                    color: RGBA(10, 10, 10, 1.0);
+
+                    > i:first-child {
+                        color: RGBA(10, 10, 10, 1.0);
+                    }
+                }
+            }
+
+            // ============ Sub Menus ===========
+            li > ul {
+                background-color: #F3F4F6;
+                border-color: #F3F4F6;
+
+                > li {
+                    > a {
+                        box-shadow: none;
+                        border: none;
+                    }
+
+                    &.nested-active > a,
+                    &.active > a {
+                        background: none;
+                        box-shadow: none;
+                    }
+
+                    &.active > a {
+                        color: RGBA(10, 10, 10, 1.0);
+                    }
+
+                    &:hover:not(.active):not(.nested-active) > a {
+                        background: none;
+                    }
+                }
+
+                // Sub Menu Top Title
+                &:before {
+                    color: RGBA(10, 10, 10, 1.0);
+                    border-color: RGBA(10, 10, 10, 0.1);
+                }
+            }
+        }
+    }
+
+}
+
+// SIDEBAR-LIGHT-DANGER
+.sidebar-light-danger {
+
+    .main-wrap {
+        background-color: white;
+    }
+
+    .navigation .sidebar {
+        background: white;
+        color: rgba(255, 255, 255, 0.5); // Regular Text
+        box-shadow: 0px -15px 20px 3px rgba(0,0,0,0.1);
+
+        // ========= TEXT-MUTED ===============
+        .text-muted {
+            color: RGBA(10, 10, 10, 0.3);
+        }
+
+        hr {
+            border-top-color: RGBA(10, 10, 10, 0.1);
+        }
+
+        // ======= Avatar Addons=========
+        .add-on-container,
+        .avatar-container {
+            border-right: none;
+            border-color: RGBA(10, 10, 10, 0.1);
+        }
+
+        .sidebar-overlay-head {
+            border-color: RGBA(10, 10, 10, 0.1);
+            border-width: 0 0 1px 0;
+
+            .sidebar-switch {
+                color: #555;
+            }
+        }
+        .sidebar-logo {
+            border-right: none;
+            border-bottom-color: RGBA(10, 10, 10, 0.1);
+            background: white;
+        }
+
+        // ============ MENU ==================
+        .sidebar-content .side-menu {
+            // ========== All Menus ===========
+            // General LI settings
+            li {
+                // General A settings
+                border-right: none;
+
+                a {
+                    color: RGBA(10, 10, 10, 0.4);        // FONT Main Color
+                    font-weight: 600;
+
+                    // Hover Link
+                    &:hover {
+                        color: yellow;
+                        background: #F1F1F1;
+                    }
+                }
+
+                // General hover A settings
+                > a:hover {
+                    color: RGBA(10, 10, 10, 1.0);
+                    background: RGBA(243, 244, 246, 1.0);
+                }
+
+                // General active A settings
+                &.active > a {
+                    background: RGBA(243, 244, 246, 1.0);
+                    color: #555555;
+                }
+            }
+
+            // ========= Main Menus ===========
+            > li {
+                // General A settings
+                > a {
+                    border-right: 0px solid $brand-danger;
+
+                    // General Icon Settings
+                    > i:first-child {
+                        color: RGBA(10, 10, 10, 0.2);
+                    }
+                }
+
+                > a:hover {
+                    color: RGBA(10, 10, 10, 1.0);
+                    background: #F3F4F6;
+                    box-shadow: 0px -1px 0px 0px #F3F4F6 inset;
+                }
+
+                // Active A settings
+                &.nested-active:not(.expanded) > a,
+                &.active > a {
+                    //Accent (switch to none if disabled)
+                    box-shadow: 3px 0px 0px 0px $brand-danger inset, 0px -1px 0px 0px #F3F4F6 inset;
+                    background: #F3F4F6;
+                    color: RGBA(10, 10, 10, 1.0);
+
+                    // Active Icon Color
+                    > i:first-child {
+                        color: RGBA(10, 10, 10, 0.6);
+                    }
+                }
+            }
+
+            // ========== Sub Menus =============
+            > li ul > li {
+                > a {
+                    // Sub Menu A General Settings
+                    border-right: 0px solid $brand-danger;
+                }
+
+                > a:hover {
+                    color: RGBA(10, 10, 10, 1.0);
+                    background: #F3F4F6;
+                    box-shadow: 0px -1px 0px 0px #F3F4F6 inset;
+                }
+
+                // Submenu Active A settings
+                &.nested-active:not(.expanded) > a,
+                &.active > a {
+                    //Accent (switch to none if disabled)
+                    box-shadow: 3px 0px 0px 0px $brand-danger inset, 0px -1px 0px 0px #F3F4F6 inset;
+                    background: #F3F4F6;
+                    color: RGBA(10, 10, 10, 1.0);
+
+                    // Active Icon Color
+                    > i:first-child {
+                        color: wheat;
+                    }
+                }
+            }
+        }
+    }
+
+    // Sidebar-Info Slim
+    &.sidebar-slim .navigation .sidebar {
+	.sidebar-content .side-menu {
+        // =========== All Menus ===========
+        li {
+            &.active > a {
+                box-shadow: none;
+            }
+
+            // Hover Background Color for menu item and SideMenu
+            &:not(.nested-active):hover > a,
+            &:not(.active):hover > a,
+            &:hover > a {
+                color: RGBA(10, 10, 10, 1.0);
+                background-color: #F3F4F6;
+            }
+        }
+
+        // ============ Main Menu ===========
+        > li {
+			&:hover:not(.nested-active):not(.active) {
+				> a {
+					color: RGBA(10, 10, 10, 1.0);
+					background: #F3F4F6;
+					box-shadow: 0px -1px 0px 0px #F3F4F6 inset;
+				}
+
+				> a > i:first-child {
+					color: RGBA(10, 10, 10, 1.0);
+				}
+			}
+        }
+
+        // ============ Sub Menus ===========
+        li > ul {
+            border-color: #F3F4F6;
+            background-color: #F3F4F6;
+            box-shadow: 14px 4px 20px 3px rgba(0,0,0,0.1);
+            > li {
+                border-color: transparent;
+
+				> a {
+					border-color: #F3F4F6;
+				}
+            }
+
+            > li:hover > a {
+                color: RGBA(10, 10, 10, 1.0);
+                background-color: #F3F4F6;
+                box-shadow: none;
+            }
+
+            > li.nested-active > a,
+            > li.active > a {
+                color: RGBA(10, 10, 10, 1.0);
+                background-color: #F3F4F6;
+                box-shadow: none;
+            }
+        }
+	}
+}
+
+
+    &.sidebar-big-icons .navigation .sidebar {
+        .sidebar-content .side-menu {
+            // =========== All Menus ==============
+            li {
+                &.active > a {
+                    color: khaki;
+                }
+            }
+
+            // ============ Main Menu ===========
+            > li {
+                &:hover:not(.active):not(.nested-active) > a {
+                    box-shadow: 0 -1px 0 0 #F3F4F6 inset;
+                    background: #F3F4F6;
+                    color: RGBA(10, 10, 10, 1.0);
+
+                    > i:first-child {
+                        color: RGBA(10, 10, 10, 1.0);
+                    }
+                }
+            }
+
+            // ============ Sub Menus ===========
+            li > ul {
+                background-color: #F3F4F6;
+                border-color: #F3F4F6;
+
+                > li {
+                    > a {
+                        box-shadow: none;
+                        border: none;
+                    }
+
+                    &.nested-active > a,
+                    &.active > a {
+                        background: none;
+                        box-shadow: none;
+                    }
+
+                    &.active > a {
+                        color: RGBA(10, 10, 10, 1.0);
+                    }
+
+                    &:hover:not(.active):not(.nested-active) > a {
+                        background: none;
+                    }
+                }
+
+                // Sub Menu Top Title
+                &:before {
+                    color: RGBA(10, 10, 10, 1.0);
+                    border-color: RGBA(10, 10, 10, 0.1);
+                }
+            }
+        }
+    }
+
+}
+
+// SIDEBAR-LIGHT-SOFT-PURPLE
+.sidebar-light-softpurple {
+
+    .main-wrap {
+        background-color: white;
+    }
+
+    .navigation .sidebar {
+        background: white;
+        color: rgba(255, 255, 255, 0.5); // Regular Text
+        box-shadow: 0px -15px 20px 3px rgba(0,0,0,0.1);
+
+        // ========= TEXT-MUTED ===============
+        .text-muted {
+            color: RGBA(10, 10, 10, 0.3);
+        }
+
+        hr {
+            border-top-color: RGBA(10, 10, 10, 0.1);
+        }
+
+        // ======= Avatar Addons=========
+        .add-on-container,
+        .avatar-container {
+            border-right: none;
+            border-color: RGBA(10, 10, 10, 0.1);
+        }
+
+        .sidebar-overlay-head {
+            border-color: RGBA(10, 10, 10, 0.1);
+            border-width: 0 0 1px 0;
+
+            .sidebar-switch {
+                color: #555;
+            }
+        }
+        .sidebar-logo {
+            border-right: none;
+            border-bottom-color: RGBA(10, 10, 10, 0.1);
+            background: white;
+        }
+
+        // ============ MENU ==================
+        .sidebar-content .side-menu {
+            // ========== All Menus ===========
+            // General LI settings
+            li {
+                // General A settings
+                border-right: none;
+
+                a {
+                    color: RGBA(10, 10, 10, 0.4);        // FONT Main Color
+                    font-weight: 600;
+
+                    // Hover Link
+                    &:hover {
+                        color: yellow;
+                        background: #F1F1F1;
+                    }
+                }
+
+                // General hover A settings
+                > a:hover {
+                    color: RGBA(10, 10, 10, 1.0);
+                    background: RGBA(243, 244, 246, 1.0);
+                }
+
+                // General active A settings
+                &.active > a {
+                    background: RGBA(243, 244, 246, 1.0);
+                    color: #555555;
+                }
+            }
+
+            // ========= Main Menus ===========
+            > li {
+                // General A settings
+                > a {
+                    border-right: 0px solid $brand-soft-purple;
+
+                    // General Icon Settings
+                    > i:first-child {
+                        color: RGBA(10, 10, 10, 0.2);
+                    }
+                }
+
+                > a:hover {
+                    color: RGBA(10, 10, 10, 1.0);
+                    background: #F3F4F6;
+                    box-shadow: 0px -1px 0px 0px #F3F4F6 inset;
+                }
+
+                // Active A settings
+                &.nested-active:not(.expanded) > a,
+                &.active > a {
+                    //Accent (switch to none if disabled)
+                    box-shadow: 3px 0px 0px 0px $brand-soft-purple inset, 0px -1px 0px 0px #F3F4F6 inset;
+                    background: #F3F4F6;
+                    color: RGBA(10, 10, 10, 1.0);
+
+                    // Active Icon Color
+                    > i:first-child {
+                        color: RGBA(10, 10, 10, 0.6);
+                    }
+                }
+            }
+
+            // ========== Sub Menus =============
+            > li ul > li {
+                > a {
+                    // Sub Menu A General Settings
+                    border-right: 0px solid $brand-soft-purple;
+                }
+
+                > a:hover {
+                    color: RGBA(10, 10, 10, 1.0);
+                    background: #F3F4F6;
+                    box-shadow: 0px -1px 0px 0px #F3F4F6 inset;
+                }
+
+                // Submenu Active A settings
+                &.nested-active:not(.expanded) > a,
+                &.active > a {
+                    //Accent (switch to none if disabled)
+                    box-shadow: 3px 0px 0px 0px $brand-soft-purple inset, 0px -1px 0px 0px #F3F4F6 inset;
+                    background: #F3F4F6;
+                    color: RGBA(10, 10, 10, 1.0);
+
+                    // Active Icon Color
+                    > i:first-child {
+                        color: wheat;
+                    }
+                }
+            }
+        }
+    }
+
+    // Sidebar-Info Slim
+    &.sidebar-slim .navigation .sidebar {
+	.sidebar-content .side-menu {
+        // =========== All Menus ===========
+        li {
+            &.active > a {
+                box-shadow: none;
+            }
+
+            // Hover Background Color for menu item and SideMenu
+            &:not(.nested-active):hover > a,
+            &:not(.active):hover > a,
+            &:hover > a {
+                color: RGBA(10, 10, 10, 1.0);
+                background-color: #F3F4F6;
+            }
+        }
+
+        // ============ Main Menu ===========
+        > li {
+			&:hover:not(.nested-active):not(.active) {
+				> a {
+					color: RGBA(10, 10, 10, 1.0);
+					background: #F3F4F6;
+					box-shadow: 0px -1px 0px 0px #F3F4F6 inset;
+				}
+
+				> a > i:first-child {
+					color: RGBA(10, 10, 10, 1.0);
+				}
+			}
+        }
+
+        // ============ Sub Menus ===========
+        li > ul {
+            border-color: #F3F4F6;
+            background-color: #F3F4F6;
+            box-shadow: 14px 4px 20px 3px rgba(0,0,0,0.1);
+            > li {
+                border-color: transparent;
+
+				> a {
+					border-color: #F3F4F6;
+				}
+            }
+
+            > li:hover > a {
+                color: RGBA(10, 10, 10, 1.0);
+                background-color: #F3F4F6;
+                box-shadow: none;
+            }
+
+            > li.nested-active > a,
+            > li.active > a {
+                color: RGBA(10, 10, 10, 1.0);
+                background-color: #F3F4F6;
+                box-shadow: none;
+            }
+        }
+	}
+}
+
+
+    &.sidebar-big-icons .navigation .sidebar {
+        .sidebar-content .side-menu {
+            // =========== All Menus ==============
+            li {
+                &.active > a {
+                    color: khaki;
+                }
+            }
+
+            // ============ Main Menu ===========
+            > li {
+                &:hover:not(.active):not(.nested-active) > a {
+                    box-shadow: 0 -1px 0 0 #F3F4F6 inset;
+                    background: #F3F4F6;
+                    color: RGBA(10, 10, 10, 1.0);
+
+                    > i:first-child {
+                        color: RGBA(10, 10, 10, 1.0);
+                    }
+                }
+            }
+
+            // ============ Sub Menus ===========
+            li > ul {
+                background-color: #F3F4F6;
+                border-color: #F3F4F6;
+
+                > li {
+                    > a {
+                        box-shadow: none;
+                        border: none;
+                    }
+
+                    &.nested-active > a,
+                    &.active > a {
+                        background: none;
+                        box-shadow: none;
+                    }
+
+                    &.active > a {
+                        color: RGBA(10, 10, 10, 1.0);
+                    }
+
+                    &:hover:not(.active):not(.nested-active) > a {
+                        background: none;
+                    }
+                }
+
+                // Sub Menu Top Title
+                &:before {
+                    color: RGBA(10, 10, 10, 1.0);
+                    border-color: RGBA(10, 10, 10, 0.1);
+                }
+            }
+        }
+    }
+
+}
+
+// SIDEBAR-LIGHT-LIGHTING-YELLOW
+.sidebar-light-lightingyellow {
+
+    .main-wrap {
+        background-color: white;
+    }
+
+    .navigation .sidebar {
+        background: white;
+        color: rgba(255, 255, 255, 0.5); // Regular Text
+        box-shadow: 0px -15px 20px 3px rgba(0,0,0,0.1);
+
+        // ========= TEXT-MUTED ===============
+        .text-muted {
+            color: RGBA(10, 10, 10, 0.3);
+        }
+
+        hr {
+            border-top-color: RGBA(10, 10, 10, 0.1);
+        }
+
+        // ======= Avatar Addons=========
+        .add-on-container,
+        .avatar-container {
+            border-right: none;
+            border-color: RGBA(10, 10, 10, 0.1);
+        }
+
+        .sidebar-overlay-head {
+            border-color: RGBA(10, 10, 10, 0.1);
+            border-width: 0 0 1px 0;
+
+            .sidebar-switch {
+                color: #555;
+            }
+        }
+        .sidebar-logo {
+            border-right: none;
+            border-bottom-color: RGBA(10, 10, 10, 0.1);
+            background: white;
+        }
+
+        // ============ MENU ==================
+        .sidebar-content .side-menu {
+            // ========== All Menus ===========
+            // General LI settings
+            li {
+                // General A settings
+                border-right: none;
+
+                a {
+                    color: RGBA(10, 10, 10, 0.4);        // FONT Main Color
+                    font-weight: 600;
+
+                    // Hover Link
+                    &:hover {
+                        color: yellow;
+                        background: #F1F1F1;
+                    }
+                }
+
+                // General hover A settings
+                > a:hover {
+                    color: RGBA(10, 10, 10, 1.0);
+                    background: RGBA(243, 244, 246, 1.0);
+                }
+
+                // General active A settings
+                &.active > a {
+                    background: RGBA(243, 244, 246, 1.0);
+                    color: #555555;
+                }
+            }
+
+            // ========= Main Menus ===========
+            > li {
+                // General A settings
+                > a {
+                    border-right: 0px solid $brand-lighting-yellow;
+
+                    // General Icon Settings
+                    > i:first-child {
+                        color: RGBA(10, 10, 10, 0.2);
+                    }
+                }
+
+                > a:hover {
+                    color: RGBA(10, 10, 10, 1.0);
+                    background: #F3F4F6;
+                    box-shadow: 0px -1px 0px 0px #F3F4F6 inset;
+                }
+
+                // Active A settings
+                &.nested-active:not(.expanded) > a,
+                &.active > a {
+                    //Accent (switch to none if disabled)
+                    box-shadow: 3px 0px 0px 0px $brand-lighting-yellow inset, 0px -1px 0px 0px #F3F4F6 inset;
+                    background: #F3F4F6;
+                    color: RGBA(10, 10, 10, 1.0);
+
+                    // Active Icon Color
+                    > i:first-child {
+                        color: RGBA(10, 10, 10, 0.6);
+                    }
+                }
+            }
+
+            // ========== Sub Menus =============
+            > li ul > li {
+                > a {
+                    // Sub Menu A General Settings
+                    border-right: 0px solid $brand-lighting-yellow;
+                }
+
+                > a:hover {
+                    color: RGBA(10, 10, 10, 1.0);
+                    background: #F3F4F6;
+                    box-shadow: 0px -1px 0px 0px #F3F4F6 inset;
+                }
+
+                // Submenu Active A settings
+                &.nested-active:not(.expanded) > a,
+                &.active > a {
+                    //Accent (switch to none if disabled)
+                    box-shadow: 3px 0px 0px 0px $brand-lighting-yellow inset, 0px -1px 0px 0px #F3F4F6 inset;
+                    background: #F3F4F6;
+                    color: RGBA(10, 10, 10, 1.0);
+
+                    // Active Icon Color
+                    > i:first-child {
+                        color: wheat;
+                    }
+                }
+            }
+        }
+    }
+
+    // Sidebar-Info Slim
+    &.sidebar-slim .navigation .sidebar {
+	.sidebar-content .side-menu {
+        // =========== All Menus ===========
+        li {
+            &.active > a {
+                box-shadow: none;
+            }
+
+            // Hover Background Color for menu item and SideMenu
+            &:not(.nested-active):hover > a,
+            &:not(.active):hover > a,
+            &:hover > a {
+                color: RGBA(10, 10, 10, 1.0);
+                background-color: #F3F4F6;
+            }
+        }
+
+        // ============ Main Menu ===========
+        > li {
+			&:hover:not(.nested-active):not(.active) {
+				> a {
+					color: RGBA(10, 10, 10, 1.0);
+					background: #F3F4F6;
+					box-shadow: 0px -1px 0px 0px #F3F4F6 inset;
+				}
+
+				> a > i:first-child {
+					color: RGBA(10, 10, 10, 1.0);
+				}
+			}
+        }
+
+        // ============ Sub Menus ===========
+        li > ul {
+            border-color: #F3F4F6;
+            background-color: #F3F4F6;
+            box-shadow: 14px 4px 20px 3px rgba(0,0,0,0.1);
+            > li {
+                border-color: transparent;
+
+				> a {
+					border-color: #F3F4F6;
+				}
+            }
+
+            > li:hover > a {
+                color: RGBA(10, 10, 10, 1.0);
+                background-color: #F3F4F6;
+                box-shadow: none;
+            }
+
+            > li.nested-active > a,
+            > li.active > a {
+                color: RGBA(10, 10, 10, 1.0);
+                background-color: #F3F4F6;
+                box-shadow: none;
+            }
+        }
+	}
+}
+
+
+    &.sidebar-big-icons .navigation .sidebar {
+        .sidebar-content .side-menu {
+            // =========== All Menus ==============
+            li {
+                &.active > a {
+                    color: khaki;
+                }
+            }
+
+            // ============ Main Menu ===========
+            > li {
+                &:hover:not(.active):not(.nested-active) > a {
+                    box-shadow: 0 -1px 0 0 #F3F4F6 inset;
+                    background: #F3F4F6;
+                    color: RGBA(10, 10, 10, 1.0);
+
+                    > i:first-child {
+                        color: RGBA(10, 10, 10, 1.0);
+                    }
+                }
+            }
+
+            // ============ Sub Menus ===========
+            li > ul {
+                background-color: #F3F4F6;
+                border-color: #F3F4F6;
+
+                > li {
+                    > a {
+                        box-shadow: none;
+                        border: none;
+                    }
+
+                    &.nested-active > a,
+                    &.active > a {
+                        background: none;
+                        box-shadow: none;
+                    }
+
+                    &.active > a {
+                        color: RGBA(10, 10, 10, 1.0);
+                    }
+
+                    &:hover:not(.active):not(.nested-active) > a {
+                        background: none;
+                    }
+                }
+
+                // Sub Menu Top Title
+                &:before {
+                    color: RGBA(10, 10, 10, 1.0);
+                    border-color: RGBA(10, 10, 10, 0.1);
+                }
+            }
+        }
+    }
+
+}
+
+
+
+
+// SIDEBAR-PRIMARY
+.sidebar-primary {
+
+    .main-wrap {
+        background-color: #A9CEFA;
+    }
+
+    .navigation .sidebar {
+        background: linear-gradient(-180deg, $brand-primary 0%, #A9CDFB 100%);
+        color: rgba(255, 255, 255, 0.7); // Regular Text
+        box-shadow: 0px -15px 20px 3px rgba(0,0,0,0.1);
+
+        // ========= TEXT-MUTED ===============
+        .text-muted {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        hr {
+            border-top-color: rgba(255, 255, 255, 0.2);
+        }
+
+        // ======= Avatar Addons=========
+        .add-on-container,
+        .avatar-container {
+            border-right: none;
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .sidebar-overlay-head {
+            border-color: rgba(255, 255, 255, 0.3);
+            border-width: 0 0 1px 0;
+
+            .sidebar-switch {
+                color: #555;
+            }
+        }
+        .sidebar-logo {
+            border-right: none;
+            border-bottom-color: rgba(255, 255, 255, 0.3);
+            background: white;
+        }
+
+        // ============ MENU ==================
+        .sidebar-content .side-menu {
+            // ========== All Menus ===========
+            // General LI settings
+            li {
+                // General A settings
+                border-right: none;
+
+                a {
+                    color: rgba(255, 255, 255, 0.9);        // FONT Main Color
+
+                    // Hover Link
+                    &:hover {
+                        color: yellow;
+                        background: #F1F1F1;
+                    }
+                }
+
+                // General hover A settings
+                > a:hover {
+                    color: rgba(255, 255, 255, 1);
+                    background: rgba(255, 255, 255, 0.3);
+                }
+
+                // General active A settings
+                &.active > a {
+                    background: rgba(255, 255, 255, 0.3);
+                    color: #555555;
+                }
+            }
+
+            // ========= Main Menus ===========
+            > li {
+                // General A settings
+                > a {
+                    border-right: 0px solid $brand-primary;
+
+                    // General Icon Settings
+                    > i:first-child {
+                        color: rgba(255, 255, 255, 0.4);
+                    }
+                }
+
+                > a:hover {
+                    color: white;
+                    background: #98C6F9;
+                    box-shadow: 0px -1px 0px 0px #98C6F9 inset;
+                }
+
+                // Active A settings
+                &.nested-active:not(.expanded) > a,
+                &.active > a {
+                    //Accent (switch to none if disabled)
+                    box-shadow: 3px 0px 0px 0px white inset, 0px -1px 0px 0px #98C6F9 inset;
+                    background: #98C6F9;
+                    color: white;
+
+                    // Active Icon Color
+                    > i:first-child {
+                        color: white;
+                    }
+                }
+            }
+
+            // ========== Sub Menus =============
+            > li ul > li {
+                > a {
+                    // Sub Menu A General Settings
+                    border-right: 0px solid $brand-primary;
+                }
+
+                > a:hover {
+                    color: white;
+                    background: #98C6F9;
+                    box-shadow: 0px -1px 0px 0px #98C6F9 inset;
+                }
+
+                // Submenu Active A settings
+                &.nested-active:not(.expanded) > a,
+                &.active > a {
+                    //Accent (switch to none if disabled)
+                    box-shadow: 3px 0px 0px 0px white inset, 0px -1px 0px 0px #98C6F9 inset;
+                    background: #98C6F9;
+                    color: white;
+
+                    // Active Icon Color
+                    > i:first-child {
+                        color: wheat;
+                    }
+                }
+            }
+        }
+    }
+
+    // Sidebar-Info Slim
+    &.sidebar-slim .navigation .sidebar {
+	.sidebar-content .side-menu {
+        // =========== All Menus ===========
+        li {
+            &.active > a {
+                box-shadow: none;
+            }
+
+            // Hover Background Color for menu item and SideMenu
+            &:not(.nested-active):hover > a,
+            &:not(.active):hover > a,
+            &:hover > a {
+                color: white;
+                background-color: #98C6F9;
+            }
+        }
+
+        // ============ Main Menu ===========
+        > li {
+			&:hover:not(.nested-active):not(.active) {
+				> a {
+					color: #555555;
+					background: #98C6F9;
+					box-shadow: 0px -1px 0px 0px #98C6F9 inset;
+				}
+
+				> a > i:first-child {
+					color: white;
+				}
+			}
+        }
+
+        // ============ Sub Menus ===========
+        li > ul {
+            border-color: #98C6F9;
+            background-color: #98C6F9;
+            box-shadow: 14px 4px 20px 3px rgba(0,0,0,0.1);
+            > li {
+                border-color: transparent;
+
+				> a {
+					border-color: #98C6F9;
+				}
+            }
+
+            > li:hover > a {
+                color: white;
+                background-color: #98C6F9;
+                box-shadow: none;
+            }
+
+            > li.nested-active > a,
+            > li.active > a {
+                color: white;
+                background-color: #98C6F9;
+                box-shadow: none;
+            }
+        }
+	}
+}
+
+
+    &.sidebar-big-icons .navigation .sidebar {
+        .sidebar-content .side-menu {
+            // =========== All Menus ==============
+            li {
+                &.active > a {
+                    color: khaki;
+                }
+            }
+
+            // ============ Main Menu ===========
+            > li {
+                &:hover:not(.active):not(.nested-active) > a {
+                    box-shadow: 0 -1px 0 0 #98C6F9 inset;
+                    background: #98C6F9;
+                    color: white;
+
+                    > i:first-child {
+                        color: white;
+                    }
+                }
+            }
+
+            // ============ Sub Menus ===========
+            li > ul {
+                background-color: #98C6F9;
+                border-color: #98C6F9;
+
+                > li {
+                    > a {
+                        box-shadow: none;
+                        border: none;
+                    }
+
+                    &.nested-active > a,
+                    &.active > a {
+                        background: none;
+                        box-shadow: none;
+                    }
+
+                    &.active > a {
+                        color: white;
+                    }
+
+                    &:hover:not(.active):not(.nested-active) > a {
+                        background: none;
+                    }
+                }
+
+                // Sub Menu Top Title
+                &:before {
+                    color: white;
+                    border-color: RGBA(255, 255, 255, 0.3);
+                }
+            }
+        }
+    }
+
+
+}
+
+// SIDEBAR-INFO
+.sidebar-info {
+
+    .main-wrap {
+        background-color: #99E1C8;
+    }
+
+    .navigation .sidebar {
+        background: linear-gradient(-180deg, $brand-info 0%, #99E1C8 100%);
+        color: rgba(255, 255, 255, 1.0); // Regular Text
+        box-shadow: 0px -15px 20px 3px rgba(0,0,0,0.1);
+
+        // ========= TEXT-MUTED ===============
+        .text-muted {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        hr {
+            border-top-color: rgba(255, 255, 255, 0.2);
+        }
+
+        // ======= Avatar Addons=========
+        .add-on-container,
+        .avatar-container {
+            border-right: none;
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .sidebar-overlay-head {
+            border-color: rgba(255, 255, 255, 0.3);
+            border-width: 0 0 1px 0;
+
+            .sidebar-switch {
+                color: #555;
+            }
+        }
+        .sidebar-logo {
+            border-right: none;
+            border-bottom-color: rgba(255, 255, 255, 0.3);
+            background: white;
+        }
+
+        // ============ MENU ==================
+        .sidebar-content .side-menu {
+            // ========== All Menus ===========
+            // General LI settings
+            li {
+                // General A settings
+                border-right: none;
+
+                a {
+                    color: rgba(255, 255, 255, 1.0);     // FONT Main Color
+
+                    // Hover Link
+                    &:hover {
+                        color: yellow;
+                        background: #F1F1F1;
+                    }
+                }
+
+                // General hover A settings
+                > a:hover {
+                    color: rgba(255, 255, 255, 1);
+                    background: yellow;
+                }
+
+                // General active A settings
+                &.active > a {
+                    background: rgba(255, 255, 255, 0.3);
+                    color: red;
+                }
+            }
+
+            // ========= Main Menus ===========
+            > li {
+                // General A settings
+                > a {
+                    border-right: 0px solid $brand-info;
+
+                    // General Icon Settings
+                    > i:first-child {
+                        color: rgba(255, 255, 255, 0.4);
+                    }
+                }
+
+                > a:hover {
+                    color: white;
+                    background: #95DFC5;
+                    box-shadow: 0px -1px 0px 0px #95DFC5 inset;
+                }
+
+                // Active A settings
+                &.nested-active:not(.expanded) > a,
+                &.active > a {
+                    //Accent (switch to none if disabled)
+                    box-shadow: 3px 0px 0px 0px white inset, 0px -1px 0px 0px #95DFC5 inset;
+                    background: #95DFC5;
+                    color: white;
+
+                    // Active Icon Color
+                    > i:first-child {
+                        color: white;
+                    }
+                }
+            }
+
+            // ========== Sub Menus =============
+            > li ul > li {
+                > a {
+                    // Sub Menu A General Settings
+                    border-right: 0px solid $brand-info;
+                }
+
+                > a:hover {
+                    color: white;
+                    background: #95DFC5;
+                    box-shadow: 0px -1px 0px 0px #95DFC5 inset;
+                }
+
+                // Submenu Active A settings
+                &.nested-active:not(.expanded) > a,
+                &.active > a {
+                    //Accent (switch to none if disabled)
+                    box-shadow: 3px 0px 0px 0px white inset, 0px -1px 0px 0px #95DFC5 inset;
+                    background: #95DFC5;
+                    color: white;
+
+                    // Active Icon Color
+                    > i:first-child {
+                        color: wheat;
+                    }
+                }
+            }
+        }
+    }
+
+    // Sidebar-info Slim
+    &.sidebar-slim .navigation .sidebar {
+	.sidebar-content .side-menu {
+        // =========== All Menus ===========
+        li {
+            &.active > a {
+                box-shadow: none;
+            }
+
+            // Hover Background Color for menu item and SideMenu
+            &:not(.nested-active):hover > a,
+            &:not(.active):hover > a,
+            &:hover > a {
+                color: white;
+                background-color: #95DFC5;
+            }
+        }
+
+        // ============ Main Menu ===========
+        > li {
+			&:hover:not(.nested-active):not(.active) {
+				> a {
+					color: #555555;
+					background: #95DFC5;
+					box-shadow: 0px -1px 0px 0px #95DFC5 inset;
+				}
+
+				> a > i:first-child {
+					color: white;
+				}
+			}
+        }
+
+        // ============ Sub Menus ===========
+        li > ul {
+            border-color: #95DFC5;
+            background-color: #95DFC5;
+            box-shadow: 14px 4px 20px 3px rgba(0,0,0,0.1);
+            > li {
+                border-color: transparent;
+
+				> a {
+					border-color: #95DFC5;
+				}
+            }
+
+            > li:hover > a {
+                color: white;
+                background-color: #95DFC5;
+                box-shadow: none;
+            }
+
+            > li.nested-active > a,
+            > li.active > a {
+                color: white;
+                background-color: #95DFC5;
+                box-shadow: none;
+            }
+        }
+	}
+}
+
+
+    &.sidebar-big-icons .navigation .sidebar {
+        .sidebar-content .side-menu {
+            // =========== All Menus ==============
+            li {
+                &.active > a {
+                    color: khaki;
+                }
+            }
+
+            // ============ Main Menu ===========
+            > li {
+                &:hover:not(.active):not(.nested-active) > a {
+                    box-shadow: 0 -1px 0 0 #95DFC5 inset;
+                    background: #95DFC5;
+                    color: white;
+
+                    > i:first-child {
+                        color: white;
+                    }
+                }
+            }
+
+            // ============ Sub Menus ===========
+            li > ul {
+                background-color: #95DFC5;
+                border-color: #95DFC5;
+
+                > li {
+                    > a {
+                        box-shadow: none;
+                        border: none;
+                    }
+
+                    &.nested-active > a,
+                    &.active > a {
+                        background: none;
+                        box-shadow: none;
+                    }
+
+                    &.active > a {
+                        color: white;
+                    }
+
+                    &:hover:not(.active):not(.nested-active) > a {
+                        background: none;
+                    }
+                }
+
+                // Sub Menu Top Title
+                &:before {
+                    color: white;
+                    border-color: RGBA(255, 255, 255, 0.3);
+                }
+            }
+        }
+    }
+
+
+}
+
+// SIDEBAR-SUCCESS
+.sidebar-success {
+
+    .main-wrap {
+        background-color: #B4D090;
+    }
+
+    .navigation .sidebar {
+        background: linear-gradient(-180deg, $brand-success 0%, #B4D090 100%);
+        color: rgba(255, 255, 255, 0.5); // Regular Text
+        box-shadow: 0px -15px 20px 3px rgba(0,0,0,0.1);
+
+        // ========= TEXT-MUTED ===============
+        .text-muted {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        hr {
+            border-top-color: rgba(255, 255, 255, 0.2);
+        }
+
+        // ======= Avatar Addons=========
+        .add-on-container,
+        .avatar-container {
+            border-right: none;
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .sidebar-overlay-head {
+            border-color: rgba(255, 255, 255, 0.3);
+            border-width: 0 0 1px 0;
+
+            .sidebar-switch {
+                color: #555;
+            }
+        }
+        .sidebar-logo {
+            border-right: none;
+            border-bottom-color: rgba(255, 255, 255, 0.3);
+            background: white;
+        }
+
+        // ============ MENU ==================
+        .sidebar-content .side-menu {
+            // ========== All Menus ===========
+            // General LI settings
+            li {
+                // General A settings
+                border-right: none;
+
+                a {
+                    color: rgba(255, 255, 255, 0.9);        // FONT Main Color
+
+                    // Hover Link
+                    &:hover {
+                        color: yellow;
+                        background: #F1F1F1;
+                    }
+                }
+
+                // General hover A settings
+                > a:hover {
+                    color: rgba(255, 255, 255, 1);
+                    background: yellow;
+                }
+
+                // General active A settings
+                &.active > a {
+                    background: rgba(255, 255, 255, 0.3);
+                    color: red;
+                }
+            }
+
+            // ========= Main Menus ===========
+            > li {
+                // General A settings
+                > a {
+                    border-right: 0px solid $brand-success;
+
+                    // General Icon Settings
+                    > i:first-child {
+                        color: rgba(255, 255, 255, 0.4);
+                    }
+                }
+
+                > a:hover {
+                    color: white;
+                    background: #BAD49A;
+                    box-shadow: 0px -1px 0px 0px #BAD49A inset;
+                }
+
+                // Active A settings
+                &.nested-active:not(.expanded) > a,
+                &.active > a {
+                    //Accent (switch to none if disabled)
+                    box-shadow: 3px 0px 0px 0px white inset, 0px -1px 0px 0px #BAD49A inset;
+                    background: #BAD49A;
+                    color: white;
+
+                    // Active Icon Color
+                    > i:first-child {
+                        color: white;
+                    }
+                }
+            }
+
+            // ========== Sub Menus =============
+            > li ul > li {
+                > a {
+                    // Sub Menu A General Settings
+                    border-right: 0px solid $brand-success;
+                }
+
+                > a:hover {
+                    color: white;
+                    background: #BAD49A;
+                    box-shadow: 0px -1px 0px 0px #BAD49A inset;
+                }
+
+                // Submenu Active A settings
+                &.nested-active:not(.expanded) > a,
+                &.active > a {
+                    //Accent (switch to none if disabled)
+                    box-shadow: 3px 0px 0px 0px white inset, 0px -1px 0px 0px #BAD49A inset;
+                    background: #BAD49A;
+                    color: white;
+
+                    // Active Icon Color
+                    > i:first-child {
+                        color: wheat;
+                    }
+                }
+            }
+        }
+    }
+
+    // Sidebar-success Slim
+    &.sidebar-slim .navigation .sidebar {
+	.sidebar-content .side-menu {
+        // =========== All Menus ===========
+        li {
+            &.active > a {
+                box-shadow: none;
+            }
+
+            // Hover Background Color for menu item and SideMenu
+            &:not(.nested-active):hover > a,
+            &:not(.active):hover > a,
+            &:hover > a {
+                color: white;
+                background-color: #BAD49A;
+            }
+        }
+
+        // ============ Main Menu ===========
+        > li {
+			&:hover:not(.nested-active):not(.active) {
+				> a {
+					color: #555555;
+					background: #BAD49A;
+					box-shadow: 0px -1px 0px 0px #BAD49A inset;
+				}
+
+				> a > i:first-child {
+					color: white;
+				}
+			}
+        }
+
+        // ============ Sub Menus ===========
+        li > ul {
+            border-color: #BAD49A;
+            background-color: #BAD49A;
+            box-shadow: 14px 4px 20px 3px rgba(0,0,0,0.1);
+            > li {
+                border-color: transparent;
+
+				> a {
+					border-color: #BAD49A;
+				}
+            }
+
+            > li:hover > a {
+                color: white;
+                background-color: #BAD49A;
+                box-shadow: none;
+            }
+
+            > li.nested-active > a,
+            > li.active > a {
+                color: white;
+                background-color: #BAD49A;
+                box-shadow: none;
+            }
+        }
+	}
+}
+
+
+    &.sidebar-big-icons .navigation .sidebar {
+        .sidebar-content .side-menu {
+            // =========== All Menus ==============
+            li {
+                &.active > a {
+                    color: khaki;
+                }
+            }
+
+            // ============ Main Menu ===========
+            > li {
+                &:hover:not(.active):not(.nested-active) > a {
+                    box-shadow: 0 -1px 0 0 #BAD49A inset;
+                    background: #BAD49A;
+                    color: white;
+
+                    > i:first-child {
+                        color: white;
+                    }
+                }
+            }
+
+            // ============ Sub Menus ===========
+            li > ul {
+                background-color: #BAD49A;
+                border-color: #BAD49A;
+
+                > li {
+                    > a {
+                        box-shadow: none;
+                        border: none;
+                    }
+
+                    &.nested-active > a,
+                    &.active > a {
+                        background: none;
+                        box-shadow: none;
+                    }
+
+                    &.active > a {
+                        color: white;
+                    }
+
+                    &:hover:not(.active):not(.nested-active) > a {
+                        background: none;
+                    }
+                }
+
+                // Sub Menu Top Title
+                &:before {
+                    color: white;
+                    border-color: RGBA(255, 255, 255, 0.3);
+                }
+            }
+        }
+    }
+
+
+}
+
+// SIDEBAR-WARNING
+.sidebar-warning {
+
+    .main-wrap {
+        background-color: #FA8D81;
+    }
+
+    .navigation .sidebar {
+        background: linear-gradient(-180deg, $brand-warning 0%, #FA8D81 100%);
+        color: rgba(255, 255, 255, 0.5); // Regular Text
+        box-shadow: 0px -15px 20px 3px rgba(0,0,0,0.1);
+
+        // ========= TEXT-MUTED ===============
+        .text-muted {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        hr {
+            border-top-color: rgba(255, 255, 255, 0.2);
+        }
+
+        // ======= Avatar Addons=========
+        .add-on-container,
+        .avatar-container {
+            border-right: none;
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .sidebar-overlay-head {
+            border-color: rgba(255, 255, 255, 0.3);
+            border-width: 0 0 1px 0;
+
+            .sidebar-switch {
+                color: #555;
+            }
+        }
+        .sidebar-logo {
+            border-right: none;
+            border-bottom-color: rgba(255, 255, 255, 0.3);
+            background: white;
+        }
+
+        // ============ MENU ==================
+        .sidebar-content .side-menu {
+            // ========== All Menus ===========
+            // General LI settings
+            li {
+                // General A settings
+                border-right: none;
+
+                a {
+                    color: rgba(255, 255, 255, 0.9);        // FONT Main Color
+
+                    // Hover Link
+                    &:hover {
+                        color: yellow;
+                        background: #F1F1F1;
+                    }
+                }
+
+                // General hover A settings
+                > a:hover {
+                    color: rgba(255, 255, 255, 1);
+                    background: yellow;
+                }
+
+                // General active A settings
+                &.active > a {
+                    background: rgba(255, 255, 255, 0.3);
+                    color: red;
+                }
+            }
+
+            // ========= Main Menus ===========
+            > li {
+                // General A settings
+                > a {
+                    border-right: 0px solid $brand-warning;
+
+                    // General Icon Settings
+                    > i:first-child {
+                        color: rgba(255, 255, 255, 0.4);
+                    }
+                }
+
+                > a:hover {
+                    color: white;
+                    background: #FAA39A;
+                    box-shadow: 0px -1px 0px 0px #FAA39A inset;
+                }
+
+                // Active A settings
+                &.nested-active:not(.expanded) > a,
+                &.active > a {
+                    //Accent (switch to none if disabled)
+                    box-shadow: 3px 0px 0px 0px white inset, 0px -1px 0px 0px #FAA39A inset;
+                    background: #FAA39A;
+                    color: white;
+
+                    // Active Icon Color
+                    > i:first-child {
+                        color: white;
+                    }
+                }
+            }
+
+            // ========== Sub Menus =============
+            > li ul > li {
+                > a {
+                    // Sub Menu A General Settings
+                    border-right: 0px solid $brand-warning;
+                }
+
+                > a:hover {
+                    color: white;
+                    background: #FAA39A;
+                    box-shadow: 0px -1px 0px 0px #FAA39A inset;
+                }
+
+                // Submenu Active A settings
+                &.nested-active:not(.expanded) > a,
+                &.active > a {
+                    //Accent (switch to none if disabled)
+                    box-shadow: 3px 0px 0px 0px white inset, 0px -1px 0px 0px #FAA39A inset;
+                    background: #FAA39A;
+                    color: white;
+
+                    // Active Icon Color
+                    > i:first-child {
+                        color: wheat;
+                    }
+                }
+            }
+        }
+    }
+
+    // Sidebar-warning Slim
+    &.sidebar-slim .navigation .sidebar {
+	.sidebar-content .side-menu {
+        // =========== All Menus ===========
+        li {
+            &.active > a {
+                box-shadow: none;
+            }
+
+            // Hover Background Color for menu item and SideMenu
+            &:not(.nested-active):hover > a,
+            &:not(.active):hover > a,
+            &:hover > a {
+                color: white;
+                background-color: #FAA39A;
+            }
+        }
+
+        // ============ Main Menu ===========
+        > li {
+			&:hover:not(.nested-active):not(.active) {
+				> a {
+					color: #555555;
+					background: #FAA39A;
+					box-shadow: 0px -1px 0px 0px #FAA39A inset;
+				}
+
+				> a > i:first-child {
+					color: white;
+				}
+			}
+        }
+
+        // ============ Sub Menus ===========
+        li > ul {
+            border-color: #FAA39A;
+            background-color: #FAA39A;
+            box-shadow: 14px 4px 20px 3px rgba(0,0,0,0.1);
+            > li {
+                border-color: transparent;
+
+				> a {
+					border-color: #FAA39A;
+				}
+            }
+
+            > li:hover > a {
+                color: white;
+                background-color: #FAA39A;
+                box-shadow: none;
+            }
+
+            > li.nested-active > a,
+            > li.active > a {
+                color: white;
+                background-color: #FAA39A;
+                box-shadow: none;
+            }
+        }
+	}
+}
+
+
+    &.sidebar-big-icons .navigation .sidebar {
+        .sidebar-content .side-menu {
+            // =========== All Menus ==============
+            li {
+                &.active > a {
+                    color: khaki;
+                }
+            }
+
+            // ============ Main Menu ===========
+            > li {
+                &:hover:not(.active):not(.nested-active) > a {
+                    box-shadow: 0 -1px 0 0 #FAA39A inset;
+                    background: #FAA39A;
+                    color: white;
+
+                    > i:first-child {
+                        color: white;
+                    }
+                }
+            }
+
+            // ============ Sub Menus ===========
+            li > ul {
+                background-color: #FAA39A;
+                border-color: #FAA39A;
+
+                > li {
+                    > a {
+                        box-shadow: none;
+                        border: none;
+                    }
+
+                    &.nested-active > a,
+                    &.active > a {
+                        background: none;
+                        box-shadow: none;
+                    }
+
+                    &.active > a {
+                        color: white;
+                    }
+
+                    &:hover:not(.active):not(.nested-active) > a {
+                        background: none;
+                    }
+                }
+
+                // Sub Menu Top Title
+                &:before {
+                    color: white;
+                    border-color: RGBA(255, 255, 255, 0.3);
+                }
+            }
+        }
+    }
+
+
+}
+
+// SIDEBAR-DANGER
+.sidebar-danger {
+
+    .main-wrap {
+        background-color: #DA7680;
+    }
+
+    .navigation .sidebar {
+        background: linear-gradient(-180deg, $brand-danger 0%, #DA7680 100%);
+        color: rgba(255, 255, 255, 0.5); // Regular Text
+        box-shadow: 0px -15px 20px 3px rgba(0,0,0,0.1);
+
+        // ========= TEXT-MUTED ===============
+        .text-muted {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        hr {
+            border-top-color: rgba(255, 255, 255, 0.2);
+        }
+
+        // ======= Avatar Addons=========
+        .add-on-container,
+        .avatar-container {
+            border-right: none;
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .sidebar-overlay-head {
+            border-color: rgba(255, 255, 255, 0.3);
+            border-width: 0 0 1px 0;
+
+            .sidebar-switch {
+                color: #555;
+            }
+        }
+        .sidebar-logo {
+            border-right: none;
+            border-bottom-color: rgba(255, 255, 255, 0.3);
+            background: white;
+        }
+
+        // ============ MENU ==================
+        .sidebar-content .side-menu {
+            // ========== All Menus ===========
+            // General LI settings
+            li {
+                // General A settings
+                border-right: none;
+
+                a {
+                    color: rgba(255, 255, 255, 0.9);
+
+                    // Hover Link
+                    &:hover {
+                        color: yellow;
+                        background: #F1F1F1;
+                    }
+                }
+
+                // General hover A settings
+                > a:hover {
+                    color: rgba(255, 255, 255, 1);
+                    background: yellow;
+                }
+
+                // General active A settings
+                &.active > a {
+                    background: rgba(255, 255, 255, 0.3);
+                    color: red;
+                }
+            }
+
+            // ========= Main Menus ===========
+            > li {
+                // General A settings
+                > a {
+                    border-right: 0px solid $brand-danger;
+
+                    // General Icon Settings
+                    > i:first-child {
+                        color: rgba(255, 255, 255, 0.4);
+                    }
+                }
+
+                > a:hover {
+                    color: white;
+                    background: #E19198;
+                    box-shadow: 0px -1px 0px 0px #E19198 inset;
+                }
+
+                // Active A settings
+                &.nested-active:not(.expanded) > a,
+                &.active > a {
+                    //Accent (switch to none if disabled)
+                    box-shadow: 3px 0px 0px 0px white inset, 0px -1px 0px 0px #E19198 inset;
+                    background: #E19198;
+                    color: white;
+
+                    // Active Icon Color
+                    > i:first-child {
+                        color: white;
+                    }
+                }
+            }
+
+            // ========== Sub Menus =============
+            > li ul > li {
+                > a {
+                    // Sub Menu A General Settings
+                    border-right: 0px solid $brand-danger;
+                }
+
+                > a:hover {
+                    color: white;
+                    background: #E19198;
+                    box-shadow: 0px -1px 0px 0px #E19198 inset;
+                }
+
+                // Submenu Active A settings
+                &.nested-active:not(.expanded) > a,
+                &.active > a {
+                    //Accent (switch to none if disabled)
+                    box-shadow: 3px 0px 0px 0px white inset, 0px -1px 0px 0px #E19198 inset;
+                    background: #E19198;
+                    color: white;
+
+                    // Active Icon Color
+                    > i:first-child {
+                        color: wheat;
+                    }
+                }
+            }
+        }
+    }
+
+    // Sidebar-danger Slim
+    &.sidebar-slim .navigation .sidebar {
+	.sidebar-content .side-menu {
+        // =========== All Menus ===========
+        li {
+            &.active > a {
+                box-shadow: none;
+            }
+
+            // Hover Background Color for menu item and SideMenu
+            &:not(.nested-active):hover > a,
+            &:not(.active):hover > a,
+            &:hover > a {
+                color: white;
+                background-color: #E19198;
+            }
+        }
+
+        // ============ Main Menu ===========
+        > li {
+			&:hover:not(.nested-active):not(.active) {
+				> a {
+					color: #555555;
+					background: #FAA39A;
+					box-shadow: 0px -1px 0px 0px #E19198 inset;
+				}
+
+				> a > i:first-child {
+					color: white;
+				}
+			}
+        }
+
+        // ============ Sub Menus ===========
+        li > ul {
+            border-color: #E19198;
+            background-color: #E19198;
+            box-shadow: 14px 4px 20px 3px rgba(0,0,0,0.1);
+            > li {
+                border-color: transparent;
+
+				> a {
+					border-color: #E19198;
+				}
+            }
+
+            > li:hover > a {
+                color: white;
+                background-color: #E19198;
+                box-shadow: none;
+            }
+
+            > li.nested-active > a,
+            > li.active > a {
+                color: white;
+                background-color: #E19198;
+                box-shadow: none;
+            }
+        }
+	}
+}
+
+
+    &.sidebar-big-icons .navigation .sidebar {
+        .sidebar-content .side-menu {
+            // =========== All Menus ==============
+            li {
+                &.active > a {
+                    color: khaki;
+                }
+            }
+
+            // ============ Main Menu ===========
+            > li {
+                &:hover:not(.active):not(.nested-active) > a {
+                    box-shadow: 0 -1px 0 0 #E19198 inset;
+                    background: #E19198;
+                    color: white;
+
+                    > i:first-child {
+                        color: white;
+                    }
+                }
+            }
+
+            // ============ Sub Menus ===========
+            li > ul {
+                background-color: #E19198;
+                border-color: #E19198;
+
+                > li {
+                    > a {
+                        box-shadow: none;
+                        border: none;
+                    }
+
+                    &.nested-active > a,
+                    &.active > a {
+                        background: none;
+                        box-shadow: none;
+                    }
+
+                    &.active > a {
+                        color: white;
+                    }
+
+                    &:hover:not(.active):not(.nested-active) > a {
+                        background: none;
+                    }
+                }
+
+                // Sub Menu Top Title
+                &:before {
+                    color: white;
+                    border-color: RGBA(255, 255, 255, 0.3);
+                }
+            }
+        }
+    }
+
+
+}
+
+// SIDEBAR-SOFT-PURPLE
+.sidebar-softpurple {
+
+    .main-wrap {
+        background-color: #C99FF1;
+    }
+
+    .navigation .sidebar {
+        background: linear-gradient(-180deg, $brand-soft-purple 0%, #C99FF1 100%);
+        color: rgba(255, 255, 255, 0.5); // Regular Text
+        box-shadow: 0px -15px 20px 3px rgba(0,0,0,0.1);
+
+        // ========= TEXT-MUTED ===============
+        .text-muted {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        hr {
+            border-top-color: rgba(255, 255, 255, 0.2);
+        }
+
+        // ======= Avatar Addons=========
+        .add-on-container,
+        .avatar-container {
+            border-right: none;
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .sidebar-overlay-head {
+            border-color: rgba(255, 255, 255, 0.3);
+            border-width: 0 0 1px 0;
+
+            .sidebar-switch {
+                color: #555;
+            }
+        }
+        .sidebar-logo {
+            border-right: none;
+            border-bottom-color: rgba(255, 255, 255, 0.3);
+            background: white;
+        }
+
+        // ============ MENU ==================
+        .sidebar-content .side-menu {
+            // ========== All Menus ===========
+            // General LI settings
+            li {
+                // General A settings
+                border-right: none;
+
+                a {
+                    color: rgba(255, 255, 255, 0.9);
+
+                    // Hover Link
+                    &:hover {
+                        color: yellow;
+                        background: #F1F1F1;
+                    }
+                }
+
+                // General hover A settings
+                > a:hover {
+                    color: rgba(255, 255, 255, 1);
+                    background: yellow;
+                }
+
+                // General active A settings
+                &.active > a {
+                    background: rgba(255, 255, 255, 0.3);
+                    color: red;
+                }
+            }
+
+            // ========= Main Menus ===========
+            > li {
+                // General A settings
+                > a {
+                    border-right: 0px solid $brand-soft-purple;
+
+                    // General Icon Settings
+                    > i:first-child {
+                        color: rgba(255, 255, 255, 0.4);
+                    }
+                }
+
+                > a:hover {
+                    color: white;
+                    background: #D1AFF2;
+                    box-shadow: 0px -1px 0px 0px #D1AFF2 inset;
+                }
+
+                // Active A settings
+                &.nested-active:not(.expanded) > a,
+                &.active > a {
+                    //Accent (switch to none if disabled)
+                    box-shadow: 3px 0px 0px 0px white inset, 0px -1px 0px 0px #D1AFF2 inset;
+                    background: #D1AFF2;
+                    color: white;
+
+                    // Active Icon Color
+                    > i:first-child {
+                        color: white;
+                    }
+                }
+            }
+
+            // ========== Sub Menus =============
+            > li ul > li {
+                > a {
+                    // Sub Menu A General Settings
+                    border-right: 0px solid $brand-soft-purple;
+                }
+
+                > a:hover {
+                    color: white;
+                    background: #D1AFF2;
+                    box-shadow: 0px -1px 0px 0px #D1AFF2 inset;
+                }
+
+                // Submenu Active A settings
+                &.nested-active:not(.expanded) > a,
+                &.active > a {
+                    //Accent (switch to none if disabled)
+                    box-shadow: 3px 0px 0px 0px white inset, 0px -1px 0px 0px #D1AFF2 inset;
+                    background: #D1AFF2;
+                    color: white;
+
+                    // Active Icon Color
+                    > i:first-child {
+                        color: wheat;
+                    }
+                }
+            }
+        }
+    }
+
+    // Sidebar-soft-purple Slim
+    &.sidebar-slim .navigation .sidebar {
+	.sidebar-content .side-menu {
+        // =========== All Menus ===========
+        li {
+            &.active > a {
+                box-shadow: none;
+            }
+
+            // Hover Background Color for menu item and SideMenu
+            &:not(.nested-active):hover > a,
+            &:not(.active):hover > a,
+            &:hover > a {
+                color: white;
+                background-color: #D1AFF2;
+            }
+        }
+
+        // ============ Main Menu ===========
+        > li {
+			&:hover:not(.nested-active):not(.active) {
+				> a {
+					color: #555555;
+					background: #D1AFF2;
+					box-shadow: 0px -1px 0px 0px #D1AFF2 inset;
+				}
+
+				> a > i:first-child {
+					color: white;
+				}
+			}
+        }
+
+        // ============ Sub Menus ===========
+        li > ul {
+            border-color: #D1AFF2;
+            background-color: #D1AFF2;
+            box-shadow: 14px 4px 20px 3px rgba(0,0,0,0.1);
+            > li {
+                border-color: transparent;
+
+				> a {
+					border-color: #D1AFF2;
+				}
+            }
+
+            > li:hover > a {
+                color: white;
+                background-color: #D1AFF2;
+                box-shadow: none;
+            }
+
+            > li.nested-active > a,
+            > li.active > a {
+                color: white;
+                background-color: #D1AFF2;
+                box-shadow: none;
+            }
+        }
+	}
+}
+
+
+    &.sidebar-big-icons .navigation .sidebar {
+        .sidebar-content .side-menu {
+            // =========== All Menus ==============
+            li {
+                &.active > a {
+                    color: khaki;
+                }
+            }
+
+            // ============ Main Menu ===========
+            > li {
+                &:hover:not(.active):not(.nested-active) > a {
+                    box-shadow: 0 -1px 0 0 #D1AFF2 inset;
+                    background: #D1AFF2;
+                    color: white;
+
+                    > i:first-child {
+                        color: white;
+                    }
+                }
+            }
+
+            // ============ Sub Menus ===========
+            li > ul {
+                background-color: #D1AFF2;
+                border-color: #D1AFF2;
+
+                > li {
+                    > a {
+                        box-shadow: none;
+                        border: none;
+                    }
+
+                    &.nested-active > a,
+                    &.active > a {
+                        background: none;
+                        box-shadow: none;
+                    }
+
+                    &.active > a {
+                        color: white;
+                    }
+
+                    &:hover:not(.active):not(.nested-active) > a {
+                        background: none;
+                    }
+                }
+
+                // Sub Menu Top Title
+                &:before {
+                    color: white;
+                    border-color: RGBA(255, 255, 255, 0.3);
+                }
+            }
+        }
+    }
+
+
+}
+
+// SIDEBAR-LIGHTING-YELLOW
+.sidebar-lightingyellow {
+
+    .main-wrap {
+        background-color: #FEDD89;
+    }
+
+    .navigation .sidebar {
+        background: linear-gradient(-180deg, $brand-lighting-yellow 0%, #FEDD89 100%);
+        color: rgba(black, 0.2); // Regular Text
+        box-shadow: 0px -15px 20px 3px rgba(0,0,0,0.1);
+
+        // ========= TEXT-MUTED ===============
+        .text-muted {
+            color: rgba(black, 0.3);
+        }
+
+        hr {
+            border-top-color: rgba(black, 0.1);
+        }
+
+        // ======= Avatar Addons=========
+        .add-on-container,
+        .avatar-container {
+            border-right: none;
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .sidebar-overlay-head {
+            border-color: rgba(255, 255, 255, 0.3);
+            border-width: 0 0 1px 0;
+
+            .sidebar-switch {
+                color: #555;
+            }
+        }
+        .sidebar-logo {
+            border-right: none;
+            border-bottom-color: rgba(255, 255, 255, 0.3);
+            background: white;
+        }
+
+        // ============ MENU ==================
+        .sidebar-content .side-menu {
+            // ========== All Menus ===========
+            // General LI settings
+            li {
+                // General A settings
+                border-right: none;
+
+                a {
+                    color: rgba(black, 0.4);
+
+                    // Hover Link
+                    &:hover {
+                        color: yellow;
+                        background: #F1F1F1;
+                    }
+                }
+
+                // General hover A settings
+                > a:hover {
+                    color: rgba(255, 255, 255, 1);
+                    background: yellow;
+                }
+
+                // General active A settings
+                &.active > a {
+                    background: rgba(255, 255, 255, 0.3);
+                    color: red;
+                }
+            }
+
+            // ========= Main Menus ===========
+            > li {
+                // General A settings
+                > a {
+                    border-right: 0px solid $brand-lighting-yellow;
+
+                    // General Icon Settings
+                    > i:first-child {
+                        color: rgba(black, 0.2);
+                    }
+                }
+
+                > a:hover {
+                    color: rgba(black, 0.5);
+                    background: #FEDE8D;
+                    box-shadow: 0px -1px 0px 0px #FEDE8D inset;
+                }
+
+                // Active A settings
+                &.nested-active:not(.expanded) > a,
+                &.active > a {
+                    //Accent (switch to none if disabled)
+                    box-shadow: 3px 0px 0px 0px white inset, 0px -1px 0px 0px #FEDE8D inset;
+                    background: #FEDE8D;
+                    color: rgba(black, 0.5);
+
+                    // Active Icon Color
+                    > i:first-child {
+                        color: rgba(black, 0.4);
+                    }
+                }
+            }
+
+            // ========== Sub Menus =============
+            > li ul > li {
+                > a {
+                    // Sub Menu A General Settings
+                    border-right: 0px solid $brand-lighting-yellow;
+                }
+
+                > a:hover {
+                    color: rgba(black, 0.5);
+                    background: #FEDE8D;
+                    box-shadow: 0px -1px 0px 0px #FEDE8D inset;
+                }
+
+                // Submenu Active A settings
+                &.nested-active:not(.expanded) > a,
+                &.active > a {
+                    //Accent (switch to none if disabled)
+                    box-shadow: 3px 0px 0px 0px white inset, 0px -1px 0px 0px #FEDE8D inset;
+                    background: #FEDE8D;
+                    color: rgba(black, 0.5);
+
+                    // Active Icon Color
+                    > i:first-child {
+                        color: wheat;
+                    }
+                }
+            }
+        }
+    }
+
+    // Sidebar-lighting-yellow Slim
+    &.sidebar-slim .navigation .sidebar {
+	.sidebar-content .side-menu {
+        // =========== All Menus ===========
+        li {
+            &.active > a {
+                box-shadow: none;
+            }
+
+            // Hover Background Color for menu item and SideMenu
+            &:not(.nested-active):hover > a,
+            &:not(.active):hover > a,
+            &:hover > a {
+                color: rgba(black, 0.7);
+                background-color: #FEDE8D;
+            }
+        }
+
+        // ============ Main Menu ===========
+        > li {
+			&:hover:not(.nested-active):not(.active) {
+				> a {
+					color: #555555;
+					background: #FEDE8D;
+					box-shadow: 0px -1px 0px 0px #FEDE8D inset;
+				}
+
+				> a > i:first-child {
+					color: rgba(black, 0.4);
+				}
+			}
+        }
+
+        // ============ Sub Menus ===========
+        li > ul {
+            border-color: #FEDE8D;
+            background-color: #FEDE8D;
+            box-shadow: 14px 4px 20px 3px rgba(0,0,0,0.1);
+            > li {
+                border-color: transparent;
+
+				> a {
+					border-color: #FEDE8D;
+				}
+            }
+
+            > li:hover > a {
+                color: rgba(black, 0.7);
+                background-color: #FEDE8D;
+                box-shadow: none;
+            }
+
+            > li.nested-active > a,
+            > li.active > a {
+                color: rgba(black, 0.7);
+                background-color: #FEDE8D;
+                box-shadow: none;
+            }
+        }
+	}
+}
+
+
+    &.sidebar-big-icons .navigation .sidebar {
+        .sidebar-content .side-menu {
+            // =========== All Menus ==============
+            li {
+                &.active > a {
+                    color: khaki;
+                }
+            }
+
+            // ============ Main Menu ===========
+            > li {
+                &:hover:not(.active):not(.nested-active) > a {
+                    box-shadow: 0 -1px 0 0 #FEDE8D inset;
+                    background: #FEDE8D;
+                    color: white;
+
+                    > i:first-child {
+                        color: white;
+                    }
+                }
+            }
+
+            // ============ Sub Menus ===========
+            li > ul {
+                background-color: #FEDE8D;
+                border-color: #FEDE8D;
+
+                > li {
+                    > a {
+                        box-shadow: none;
+                        border: none;
+                    }
+
+                    &.nested-active > a,
+                    &.active > a {
+                        background: none;
+                        box-shadow: none;
+                    }
+
+                    &.active > a {
+                        color: white;
+                    }
+
+                    &:hover:not(.active):not(.nested-active) > a {
+                        background: none;
+                    }
+                }
+
+                // Sub Menu Top Title
+                &:before {
+                    color: white;
+                    border-color: RGBA(255, 255, 255, 0.3);
+                }
+            }
+        }
+    }
+
+
+}

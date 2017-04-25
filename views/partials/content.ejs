@@ -1,0 +1,100 @@
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script>
+<script src="vendor/js/highstock.min.js"></script>
+<script src="javascript/peity-settings.js"></script>
+<script src="javascript/highchart-themes/highcharts&amp;highstock-theme.js"></script>
+
+<script src="vendor/js/bootstrap-tagsinput.min.js"></script>
+<script src="vendor/js/moment.min.js"></script>
+<script src="vendor/js/daterangepicker.min.js"></script>
+<script src="javascript/date-range-picker-settings.js"></script>
+
+
+
+
+<!-- START Sub-Navbar with Header and Breadcrumbs-->
+<div class="sub-navbar sub-navbar__header-breadcrumbs">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 sub-navbar-column">
+                <div class="sub-navbar-header">
+                    <h3>Twitter Analyzer</h3>
+                </div>
+                <ol class="breadcrumb navbar-text navbar-right no-bg">
+                    <li class="current-parent">
+                        <a class="current-parent" href="index.html">
+                            <i class="fa fa-fw fa-home"></i>
+                        </a>
+                    </li>
+                    <li  class="active">
+                        <a>
+                            Twitter Analyzer
+                        </a>
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END Sub-Navbar with Header and Breadcrumbs-->
+
+
+<div class="container" id="daterangepicker-container">
+
+    <!-- START Content -->
+    <div class="row">
+        <div class="col-lg-12">
+
+          <div class="panel panel-default shadow-box b-a-0">
+              <div class="panel-body">
+
+                  <form class="form-inline" name="form1" id="form1">
+<br />Related Keywords: <input type="text" name="tags" id="tags" value="Samsung Galaxy S7,Apple iPhone 7" data-role="tagsinput" />
+                      <div class="form-group">
+                        <label for="date" class="m-r-1">Speed : <div id="speed"></div></label>
+                            <button type="button" id="btn_speed" class="btn btn-primary">Speed</button>
+                      </div>
+                      <div class="form-group">
+                          <label for="keyword" class="m-r-1">Keyword</label>
+                          <input type="text" class="form-control" name="keyword" id="keyword" value="SamsungGalaxyS8">
+                      </div>
+
+                      <button type="button" id="btn_submit" class="btn btn-primary">Set</button>
+
+                  </form>
+
+              </div>
+          </div>
+        </div>
+    </div>
+    <!-- END Content -->
+    <!-- START ROWs #1 -->
+        <div class="row m-t-1 m-b-2">
+
+          <div class="col-lg-8">
+            <div class="hr-text hr-text-left m-b-0">
+                <h6 class="text-white"><strong>Trend Analyzer (2016)</strong></h6>
+            </div>
+            <div class="highcharts-line-overview"></div>
+            <div class="hr-text hr-text-left m-b-0">
+                <h6 class="text-white"><strong>Trend Predict (2017)</strong></h6>
+            </div>
+            <div class="highcharts-line-predict"></div>
+          </div>
+          <div class="col-lg-4">
+            <div class="block social-block social-twitter">
+              <div class="hr-text hr-text-left m-b-0">
+                  <h6 class="text-white"><strong>Search Result </strong></h6>
+              </div>
+              <div id="search-result">
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- END ROWs #1 -->
+
+</div>
+
+        </div>
+
+        <script src="javascript/script.js"></script>
