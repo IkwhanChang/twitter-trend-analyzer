@@ -1,6 +1,7 @@
 (function(){
     window.Dashboard = window.Dashboard || { };
 
+
     // Priority initialization
     Dashboard.LayoutControl.setContentMinHeight();
     Dashboard.Sidebar.expandMenuToCurrentLink();
