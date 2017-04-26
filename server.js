@@ -13,7 +13,7 @@ var client = new Twitter({
   access_token_secret: 'mjP0w2wN2Ms3MNcd4my71s2RtYsr6qGgixGXZjl6ZR5HE'
 });
 
-app.set('port', (process.env.PORT || 5000));
+app.set('port', (process.env.PORT || 6000));
 
 app.use(express.static(__dirname + '/public'));
 
@@ -21,18 +21,10 @@ app.use(express.static(__dirname + '/public'));
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 
-// Router + Callback
-
-// http://localhost/
 app.get('/', function(request, response) {
   response.render('pages/index');
 });
 
-app.get('/hi', function(request, response) {
-  response.send("Hello World!");
-});
-
-// http://localhost/searchTweets?keyword=adasd
 app.get('/searchTweets', function(request, response){
   var keyword = request.param('keyword');
   response.set('Content-Type', 'application/javascript');
@@ -42,9 +34,8 @@ app.get('/searchTweets', function(request, response){
 
 });
 
-// Main Listening
 http.listen(app.get('port'), function(){
-  console.log('Node app is running on port', app.get('port'));
+  console.log('Node customized app is running on port', app.get('port'));
 });
 
 
@@ -70,14 +61,12 @@ app.get('/streamTweets', function(request, response){
  // Web Socket
 
  io.on('connection', function(socket){
-   //console.log('a user connected');
-
-   // Socket: streamTweets
-   // socket.emit('streamTweets',{keyword:$('#keyword').val()});
+   console.log('a user connected');
    socket.on('streamTweets', function(keyword){
-    //console.log('keyword: ' + keyword.keyword);
+    console.log('keyword: ' + keyword.keyword);
 
-    // Stream API
+
+
     var stream = client.stream('statuses/filter', {track: keyword.keyword});
 
     stream.on('data', function(event) {
@@ -90,8 +79,6 @@ app.get('/streamTweets', function(request, response){
       console.log(error);
     });
   });
-
-  // Socket: disconnect
    socket.on('disconnect', function(){
      console.log('user disconnected');
    });

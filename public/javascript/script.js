@@ -5,7 +5,20 @@ var global_datas = {};
 
 var kk = 0;
 
-$('#btn_submit').click(function() {
+
+  var socket = io();
+
+  $('#btn_stop').click(function() {
+    //socket.emit('disconnect');
+    $('#btn_stop').attr("disabled");
+    $('#btn_start').removeAttr("disabled");
+  });
+
+$('#btn_start').click(function() {
+
+  $('#btn_start').attr("disabled");
+  $('#btn_stop').removeAttr("disabled");
+  // 1. AJAX Part for the Search API
   $.get( '/searchTweets',
     {
     "keyword":encodeURIComponent($("#keyword").val())
@@ -22,27 +35,25 @@ $('#btn_submit').click(function() {
 
     });
 
+    // 2. Web Socket Part for the Stream API
+
+    // Call the server's socket
     socket.emit('streamTweets',{keyword:$('#keyword').val()});
 
-    $("#btn_speed").click(function(){
-        kk++;
-        if(kk === 2)  kk = 0;
-    });
-
+    // Receive the server's Stream API's result
     socket.on('tweets', function(tweets){
         //console.log(tweets);
 
+        // DOM appending
         $("#search-result")
         .prepend('<hr>')
         .prepend('  <p class="m-t-1"><span>'+$.parseJSON(tweets).text+'</span></p>')
         .prepend('  <span>@'+$.parseJSON(tweets).user.screen_name+'</span> &middot; '+$.parseJSON(tweets).created_at+'')
         .prepend('<h5 class="m-b-0"><a href="#"><span>'+$.parseJSON(tweets).user.name+'</span></a></h5>');
 
-        if(kk === 0){
-          var date = moment($.parseJSON(tweets).created_at).format('YYYYMMDDhmmss');
-        }else {
-          var date = moment($.parseJSON(tweets).created_at).format('YYYYMMDDhmm');  
-        }
+
+        var date = moment($.parseJSON(tweets).created_at).format('YYYYMMDDhmmss');
+        console.log(date);
         if(global_datas[date] === null || global_datas[date] === undefined)  global_datas[date] = 1;
         else {
           global_datas[date]++;
@@ -60,8 +71,6 @@ $('#btn_submit').click(function() {
             }
 
         }
-
-
 
         setChartData(global_categories, global_series);
         //$('.highcharts-line-overview').xAxis.setCategories( categories );
@@ -87,7 +96,6 @@ $.get( '/searchTweets',
   });
 
 
-  var socket = io();
 
   function setChartData(categories, series){
     $('.highcharts-line-overview').highcharts({
