@@ -81,7 +81,7 @@ app.get('/streamTweets', function(request, response){
     var stream = client.stream('statuses/filter', {track: keyword.keyword});
 
     stream.on('data', function(event) {
-      console.log(event && event.text);
+      console.log(event);
       //response.send(JSON.stringify(event));
       io.emit('tweets', JSON.stringify(event));
     });
