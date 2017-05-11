@@ -14,18 +14,62 @@ var no_of_tweets = 0;
   var socket = io();
 
   $('#btn_stop').click(function() {
-    //socket.emit('disconnect');
-    $('#btn_stop').attr("disabled");
-    $('#btn_start').removeAttr("disabled");
+    socket.emit('stopStreamTweets');
 
-    is_started = 0;
-    no_of_tweets = 0;
+    socket.on('stop', function(tweets){
+      $('#btn_stop').attr("disabled");
+      $('#btn_start').removeAttr("disabled");
+
+      is_started = 0;
+      no_of_tweets = 0;
+
+      socket = io();
+
+    });
+
   });
+var markers = [];
+var map;
+  // Adds a marker to the map and push to the array.
+  function addMarker(location) {
+    var marker = new google.maps.Marker({
+      position: location,
+      map: map,
+      icon: 'http://www.thedailynole.com/images/misc/twitter.png',
+    });
+    markers.push(marker);
+  }
+
+  // Sets the map on all markers in the array.
+  function setMapOnAll(map) {
+    for (var i = 0; i < markers.length; i++) {
+      markers[i].setMap(map);
+    }
+  }
+
+  // Removes the markers from the map, but keeps them in the array.
+  function clearMarkers() {
+    setMapOnAll(null);
+  }
+
+  // Shows any markers currently in the array.
+  function showMarkers() {
+    setMapOnAll(map);
+  }
+
+  // Deletes all markers in the array by removing references to them.
+  function deleteMarkers() {
+    clearMarkers();
+    markers = [];
+  }
 
 $('#btn_start').click(function() {
   is_started = 1;
   $('#btn_start').attr("disabled");
   $('#btn_stop').removeAttr("disabled");
+
+  deleteMarkers();
+  redrawChart();
 
     // 2. Web Socket Part for the Stream API
 
@@ -40,7 +84,7 @@ $('#btn_start').click(function() {
         // DOM appending
         if(is_started == 1){
           no_of_tweets++;
-          if(no_of_tweets > 200)  $("#search-result").empty();
+          if(no_of_tweets%200 == 0)  $("#search-result").empty();
           $("#no-of-tweets").empty().append('<h1 class="f-w-300  m-t-0 m-b-0">'+no_of_tweets+'</h1>')
           $("#search-result")
           .prepend('<hr>')
@@ -52,11 +96,13 @@ $('#btn_start').click(function() {
             $.get("https://maps.google.com/maps/api/geocode/json?key=AIzaSyBM3FWODGBMwigdcykSrqHjzzdjWk8N-bo&address="+$.parseJSON(tweets).user.location).done(function(data){
                 //console.log(data);
                 var latLng = new google.maps.LatLng(data.results[0].geometry.location.lat,data.results[0].geometry.location.lng);
-                var marker = new google.maps.Marker({
+                /*var marker = new google.maps.Marker({
                   position: latLng,
                   icon: 'http://www.thedailynole.com/images/misc/twitter.png',
                   map: map
-                });
+                });*/
+
+                addMarker(latLng);
             });
             //console.log($.parseJSON(tweets).user.location);
 
@@ -91,96 +137,134 @@ $.get( '/searchTweets',
 
 
 
-  function setChartData(categories, series){
-
+  function redrawChart(){
 
     $('.highcharts-line-overview').highcharts({
-        chart: {
-            renderTo: 'container',
-            backgroundColor: 'transparent',
-            type: 'area',
+      chart: {
+          renderTo: 'container',
+          backgroundColor: 'transparent',
+          type: 'line',
+          animation: Highcharts.svg, // don't animate in old IE
+          events:{
             load: function () {
 
-                    // set up the updating of the chart each second
-                    var series = this.series[0];
+              var self = this;
 
-                    setInterval(function () {
-                        var x = (new Date()).getTime(), // current time
-                            y = Math.random();
+              socket.on('tweets', function(tweets){
+                  //console.log(tweets);
 
-                            for (var key in global_datas) {
+                  // DOM appending
+                  if(is_started == 1){
 
-                                series.addPoint([key, global_datas[key]], true, true);
+                    var date = moment($.parseJSON(tweets).created_at, 'dd MMM DD HH:mm:ss ZZ YYYY', 'en').format("YYYYMMDDhmmss");
+                    //console.log(date);
+                    //global_series[date] = (global_series[date] === undefined || global_series[date] === null ? 0 : global_series[date] + 1);
+                    //self.series[0].addPoint([date, global_series[date]], true, true);
+                    //self.series[0].data = global_series;
 
 
-                            }
+                    if(global_datas[date] === null || global_datas[date] === undefined)  global_datas[date] = 1;
+                    else {
+                      global_datas[date]++;
+                    }
 
-                            global_datas.empty();
 
-                    }, 1000);
+                    var date2 = moment($.parseJSON(tweets).created_at).toDate();
+                    //console.log(moment($.parseJSON(tweets).created_at, 'dd MMM DD HH:mm:ss ZZ YYYY', 'en').toDate().getTime());
+                    self.series[0].addPoint([moment($.parseJSON(tweets).created_at, 'dd MMM DD HH:mm:ss ZZ YYYY', 'en').toDate().getTime(), global_datas[date]],true,false);//add to last
+                  }
+
+
+              });
                 }
-        },
-        title: {
-            text: '',
-            x: -20 //center
-        },
-        subtitle: {
-            text: '',
-            x: -20
-        },
-        xAxis: {
-            gridLineWidth: 1,
-            categories: categories,
-            tickPixelInterval: 150
-        },
-        credits: {
-            enabled: false
-        },
-        exporting: {
-            enabled: false
-        },
-        yAxis: {
-            gridLineWidth: 1,
-            title: {
-                text: ''
-            },
-            plotLines: [{
-                value: 0,
-                width: 1,
-                color: '#808080'
-            }]
-        },
-        tooltip: {
-            valueSuffix: ''
-        },
-        legend: {
-            layout: 'horizontal',
-            align: 'right',
-            verticalAlign: 'top',
-            borderWidth: 0
-        },
-        series: [{
-            type: 'area',
-            name: $('#keyword').val(),
-            data: series,
-            lineWidth: '1',
-            marker: {
-                symbol: 'circle',
-            },
-            color: 'RGBA(70,197,152,1.00)',
-            fillColor: {
-                linearGradient: {
-                    x1: 0,
-                    y1: 0,
-                    x2: 0,
-                    y2: 1
-                },
-                stops: [
-                    [0, 'rgba(70,197,152,.2)'],
-                    [1, 'rgba(70,197,152,0)']
-                ]
-            }
-        }]
+          }
+      },
+      title: {
+          text: '',
+          x: -20 //center
+      },
+      subtitle: {
+          text: '',
+          x: -20
+      },
+      xAxis: {
+          gridLineWidth: 1,
+          type: 'datetime',
+          tickPixelInterval: 150,
+          labels: {
+              formatter: function() {
+                  return Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.value);
+              }
+          }
+      },
+      credits: {
+          enabled: false
+      },
+      exporting: {
+          enabled: false
+      },
+      yAxis: {
+          gridLineWidth: 1,
+          title: {
+              text: ''
+          },
+          plotLines: [{
+              value: 0,
+              width: 1,
+              color: '#808080'
+          }]
+      },
+      tooltip: {
+          valueSuffix: '',
+          labels: {
+              formatter: function() {
+                  return Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.value);
+              }
+          }
+      },
+      legend: {
+          layout: 'horizontal',
+          align: 'right',
+          verticalAlign: 'top',
+          borderWidth: 0
+      },
+      series: [{
+          type: 'area',
+          name: $('#keyword').val(),
+          data: (function () {
+          // generate an array of random data
+          var data = [],
+              time = parseInt(moment().format("YYYYMMDDhmmss")),
+              i;
+
+          for (i = -19; i <= 0; i += 1) {
+            //console.log(moment().add(i, 's').format($("#search_type").val()).toDate());
+            var d = moment().add(i, 's').toDate();
+              data.push({
+                  x: moment().add(i, 's').utc().toDate().getTime(),
+                  y: 0
+              });
+          }
+          return data;
+      }()),
+          lineWidth: '1',
+          marker: {
+              symbol: 'circle',
+          },
+          color: 'RGBA(70,197,152,1.00)',
+          fillColor: {
+              linearGradient: {
+                  x1: 0,
+                  y1: 0,
+                  x2: 0,
+                  y2: 1
+              },
+              stops: [
+                  [0, 'rgba(70,197,152,.2)'],
+                  [1, 'rgba(70,197,152,0)']
+              ]
+          }
+      }]
     });
   }
 
@@ -208,58 +292,6 @@ $(function() {
 
                     var self = this;
 
-                    socket.on('tweets', function(tweets){
-                        //console.log(tweets);
-
-                        // DOM appending
-                        if(is_started == 1){
-
-                          var date = moment($.parseJSON(tweets).created_at, 'dd MMM DD HH:mm:ss ZZ YYYY', 'en').format($("#search_type").val());
-                          //console.log(date);
-                          //global_series[date] = (global_series[date] === undefined || global_series[date] === null ? 0 : global_series[date] + 1);
-                          //self.series[0].addPoint([date, global_series[date]], true, true);
-                          //self.series[0].data = global_series;
-
-
-                          if(global_datas[date] === null || global_datas[date] === undefined)  global_datas[date] = 1;
-                          else {
-                            global_datas[date]++;
-                          }
-
-
-                          var date2 = moment($.parseJSON(tweets).created_at).toDate();
-                          //console.log(moment($.parseJSON(tweets).created_at, 'dd MMM DD HH:mm:ss ZZ YYYY', 'en').toDate().getTime());
-                          self.series[0].addPoint([moment($.parseJSON(tweets).created_at, 'dd MMM DD HH:mm:ss ZZ YYYY', 'en').toDate().getTime(), global_datas[date]],true,false);//add to last
-/*
-                          for (var key in global_datas) {
-                              if(key !== date) continue;
-                              var idx = global_categories.indexOf(key);
-                              console.log(idx + " / "+key + " / "+global_series[idx])
-                              if(idx === -1){
-                                //newCategories.push('new'+(newCategories.length))
-
-
-                                  global_categories.push(key);
-                                  global_series.push(1);
-                              }else{
-                                global_series[idx] = global_datas[date];
-                              }
-                              //self.xAxis[0].setCategories(global_categories);
-                              self.series[0].addPoint([idx, global_series[idx]],true,true);//add to last
-                              //self.series[0].data = global_series;
-
-
-                          }
-
-*/
-
-
-                          //setChartData(global_categories, global_series);
-                          //$('.highcharts-line-overview').xAxis.setCategories( categories );
-                        }
-
-
-                    });
                       }
                 }
             },
@@ -318,7 +350,7 @@ $(function() {
                 data: (function () {
                 // generate an array of random data
                 var data = [],
-                    time = parseInt(moment().format($("#search_type").val())),
+                    time = parseInt(moment().format("YYYYMMDDhmmss")),
                     i;
 
                 for (i = -19; i <= 0; i += 1) {

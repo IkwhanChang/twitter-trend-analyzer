@@ -68,17 +68,17 @@ app.get('/streamTweets', function(request, response){
 });
 
  // Web Socket
-
+var stream;
  io.on('connection', function(socket){
    //console.log('a user connected');
 
    // Socket: streamTweets
    // socket.emit('streamTweets',{keyword:$('#keyword').val()});
    socket.on('streamTweets', function(keyword){
-    //console.log('keyword: ' + keyword.keyword);
+    console.log('keyword: ' + keyword.keyword);
 
     // Stream API
-    var stream = client.stream('statuses/filter', {track: keyword.keyword});
+    stream = client.stream('statuses/filter', {track: keyword.keyword});
 
     stream.on('data', function(event) {
       console.log(event);
@@ -89,10 +89,19 @@ app.get('/streamTweets', function(request, response){
     stream.on('error', function(error) {
       console.log(error);
     });
+
+
   });
 
   // Socket: disconnect
    socket.on('disconnect', function(){
      console.log('user disconnected');
    });
+
+   socket.on('stopStreamTweets', function(){
+     console.log("stop");
+    stream.destroy();
+    io.emit('stop');
+
+    });
  });

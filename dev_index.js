@@ -6,14 +6,15 @@ var io = require('socket.io')(http);
 
 // Twitter Settings
 
+
 var client = new Twitter({
-  consumer_key: '2zwVBCyKplQMgQuKQ0bcs7wzV',
-  consumer_secret: 'FdncgglbFhBJEDfp99YC0Il0ZPcH0s1z03gm8ZHAnQV2BLZYIU',
-  access_token_key: '18710632-j88MLia314s22wkdycgWKX7Lu3en0nseTNXPrzk0E',
-  access_token_secret: 'mjP0w2wN2Ms3MNcd4my71s2RtYsr6qGgixGXZjl6ZR5HE'
+  consumer_key: 'iHsyIsZAjO4YcyO4axlH38nVA',
+  consumer_secret: 'yFueAF5Vf4ip5syl7kOs0LOrvyICCM9Ip1SVvpF5RhgYxV5BQl',
+  access_token_key: '18710632-RjA44di509peXjHsIdsLajf7lZ06uXeUZg3LPHuGP',
+  access_token_secret: 'T3BvunTwnKeWKtaKG0WbrAe5bW1Q2p6znB7kOv2KHcMkJ'
 });
 
-app.set('port', (process.env.PORT || 6000));
+app.set('port', (process.env.PORT || 5000));
 
 app.use(express.static(__dirname + '/public'));
 
@@ -21,10 +22,18 @@ app.use(express.static(__dirname + '/public'));
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 
+// Router + Callback
+
+// http://localhost/
 app.get('/', function(request, response) {
   response.render('pages/index');
 });
 
+app.get('/hi', function(request, response) {
+  response.send("Hello World!");
+});
+
+// http://localhost/searchTweets?keyword=adasd
 app.get('/searchTweets', function(request, response){
   var keyword = request.param('keyword');
   response.set('Content-Type', 'application/javascript');
@@ -34,8 +43,9 @@ app.get('/searchTweets', function(request, response){
 
 });
 
+// Main Listening
 http.listen(app.get('port'), function(){
-  console.log('Node customized app is running on port', app.get('port'));
+  console.log('Node app is running on port', app.get('port'));
 });
 
 
@@ -59,18 +69,20 @@ app.get('/streamTweets', function(request, response){
 });
 
  // Web Socket
-
+var stream;
  io.on('connection', function(socket){
-   console.log('a user connected');
+   //console.log('a user connected');
+
+   // Socket: streamTweets
+   // socket.emit('streamTweets',{keyword:$('#keyword').val()});
    socket.on('streamTweets', function(keyword){
     console.log('keyword: ' + keyword.keyword);
 
-
-
-    var stream = client.stream('statuses/filter', {track: keyword.keyword});
+    // Stream API
+    stream = client.stream('statuses/filter', {track: keyword.keyword});
 
     stream.on('data', function(event) {
-      console.log(event && event.text);
+      console.log(event);
       //response.send(JSON.stringify(event));
       io.emit('tweets', JSON.stringify(event));
     });
@@ -78,8 +90,19 @@ app.get('/streamTweets', function(request, response){
     stream.on('error', function(error) {
       console.log(error);
     });
+
+
   });
+
+  // Socket: disconnect
    socket.on('disconnect', function(){
      console.log('user disconnected');
    });
+
+   socket.on('stopStreamTweets', function(){
+     console.log("stop");
+    stream.destroy();
+    io.emit('stop');
+
+    });
  });
