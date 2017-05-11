@@ -1,6 +1,6 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.js"></script>
-<script src="vendor/js/highstock.min.js"></script>
+<script src="http://github.highcharts.com/highcharts.js"></script>
 <script src="javascript/peity-settings.js"></script>
 <script src="javascript/highchart-themes/highcharts&amp;highstock-theme.js"></script>
 
@@ -8,6 +8,10 @@
 <script src="https://www.amcharts.com/lib/3/maps/js/worldLow.js"></script>
 <script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
 <script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
+<script src="http://github.highcharts.com/modules/exporting.src.js"></script>
+<script src="http://code.highcharts.com/modules/exporting.js"></script>
+<script src="http://highcharts.github.io/export-csv/export-csv.js"></script>
+
 
 
 <script src="vendor/js/bootstrap-tagsinput.min.js"></script>
@@ -72,6 +76,8 @@
 
                       <button type="button" id="btn_start" class="btn btn-primary">Start</button>
                       <button type="button" id="btn_stop" class="btn btn-danger" disabled>Stop</button>
+                      
+                      <a id="getCsv" href="#" class="btn btn-warning">download</a>
 
                   </form>
 

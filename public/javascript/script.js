@@ -13,8 +13,12 @@ var no_of_tweets = 0;
 
   var socket = io();
 
+  var chart;
+
   $('#btn_stop').click(function() {
     socket.emit('stopStreamTweets');
+
+    //alert($('.highcharts-line-overview').highcharts().getCSV());
 
     socket.on('stop', function(tweets){
       $('#btn_stop').attr("disabled");
@@ -27,6 +31,12 @@ var no_of_tweets = 0;
 
     });
 
+  });
+
+  $('#getCsv').click(function() {
+      var chart = $('.highcharts-line-overview').highcharts();
+      $(this).attr('href', 'data:text/csv;charset=utf-8,'+escape(chart.getCSV()));
+      $(this).attr('download', "twitter-trend-analyzer.csv");
   });
 var markers = [];
 var map;
@@ -139,7 +149,7 @@ $.get( '/searchTweets',
 
   function redrawChart(){
 
-    $('.highcharts-line-overview').highcharts({
+    chart = $('.highcharts-line-overview').highcharts({
       chart: {
           renderTo: 'container',
           backgroundColor: 'transparent',
@@ -281,7 +291,7 @@ $(function() {
     /** This chart from (Visitor Chart) overview.html **/
     Dashboard.Helpers.elementExists('.highcharts-line-overview', function() {
 
-        $(this).highcharts({
+        chart = $(this).highcharts({
             chart: {
                 renderTo: 'container',
                 backgroundColor: 'transparent',
