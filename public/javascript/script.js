@@ -50,12 +50,23 @@ var no_of_tweets = 0;
 var markers = [];
 var map;
   // Adds a marker to the map and push to the array.
-  function addMarker(location) {
+  function addMarker(location, title, contentString) {
+
+    var infowindow = new google.maps.InfoWindow({
+          content: '<p class="m-t-1"><span>'+contentString+'</span></p>'+
+          '  <span>@'+title+'</span>'
+        });
+
     var marker = new google.maps.Marker({
       position: location,
       map: map,
+      title: '@'+title,
       icon: 'http://www.thedailynole.com/images/misc/twitter.png',
     });
+
+    marker.addListener('click', function() {
+        infowindow.open(map, marker);
+      });
     markers.push(marker);
   }
 
@@ -128,7 +139,7 @@ function startStreaming() {
                   map: map
                 });*/
 
-                addMarker(latLng);
+                addMarker(latLng, $.parseJSON(tweets).user.screen_name, $.parseJSON(tweets).text);
             });
             //console.log($.parseJSON(tweets).user.location);
 
