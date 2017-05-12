@@ -89,6 +89,8 @@ $('#btn_start').click(function() {
 
 function startStreaming() {
   is_started = 1;
+
+  $("#no-of-tweets").empty().append('<h1 class="f-w-300  m-t-0 m-b-0">'+no_of_tweets+'</h1>')
   $('#btn_start').prop("disabled", true);
   $('#btn_stop').prop("disabled", false);
 
