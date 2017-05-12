@@ -21,8 +21,8 @@ var no_of_tweets = 0;
     //alert($('.highcharts-line-overview').highcharts().getCSV());
 
     socket.on('stop', function(tweets){
-      $('#btn_stop').attr("disabled");
-      $('#btn_start').removeAttr("disabled");
+      $('#btn_start').prop("disabled", false);
+      $('#btn_stop').prop("disabled", true);
 
       is_started = 0;
       no_of_tweets = 0;
@@ -33,10 +33,19 @@ var no_of_tweets = 0;
 
   });
 
+  $('#keyword').keyup(function(e){
+    if(e.keyCode == 13)
+    {
+        startStreaming();
+    }
+    e.preventDefault();
+});
+
   $('#getCsv').click(function() {
-      var chart = $('.highcharts-line-overview').highcharts();
-      $(this).attr('href', 'data:text/csv;charset=utf-8,'+escape(chart.getCSV()));
-      $(this).attr('download', "twitter-trend-analyzer.csv");
+    var chart = $('.highcharts-line-overview').highcharts();
+    $(this).attr('href', 'data:text/csv;charset=utf-8,'+escape(chart.getCSV()));
+    $(this).attr('download', "twitter-trend-analyzer.csv");
+
   });
 var markers = [];
 var map;
@@ -74,9 +83,14 @@ var map;
   }
 
 $('#btn_start').click(function() {
+  startStreaming();
+  event.preventDefault();
+});
+
+function startStreaming() {
   is_started = 1;
-  $('#btn_start').attr("disabled");
-  $('#btn_stop').removeAttr("disabled");
+  $('#btn_start').prop("disabled", true);
+  $('#btn_stop').prop("disabled", false);
 
   deleteMarkers();
   redrawChart();
@@ -126,8 +140,7 @@ $('#btn_start').click(function() {
 
 
     });
-  event.preventDefault();
-});
+}
 
 $.get( '/searchTweets',
   {
