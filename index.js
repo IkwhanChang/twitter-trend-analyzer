@@ -7,10 +7,10 @@ var io = require('socket.io')(http);
 // Twitter Settings
 
 var client = new Twitter({
-  consumer_key: '2zwVBCyKplQMgQuKQ0bcs7wzV',
-  consumer_secret: 'FdncgglbFhBJEDfp99YC0Il0ZPcH0s1z03gm8ZHAnQV2BLZYIU',
-  access_token_key: '18710632-j88MLia314s22wkdycgWKX7Lu3en0nseTNXPrzk0E',
-  access_token_secret: 'mjP0w2wN2Ms3MNcd4my71s2RtYsr6qGgixGXZjl6ZR5HE'
+  consumer_key: '[YOUR_CONSUMER_KEY]',
+  consumer_secret: '[YOUR_CONSUMER_SECRET]',
+  access_token_key: '[YOUR_ACCESS_TOKEN_KEY]',
+  access_token_secret: '[YOUR_ACCESS_TOKEN_SECRET]'
 });
 
 app.set('port', (process.env.PORT || 5000));
