@@ -1,104 +1,99 @@
-var global_categories = [];
-var global_series = [];
+let global_categories = [],
+    global_series = [],
+    global_datas = {},
+    kk = 0,
+    is_started = 0,
+    no_of_tweets = 0;
 
-var global_datas = {};
+let socket = io();
+let chart;
 
-var kk = 0;
+const google_api_key = "AIzaSyBM3FWODGBMwigdcykSrqHjzzdjWk8N-bo";
 
-var is_started = 0;
+$('#btn_stop').click(() => {
+  socket.emit('stopStreamTweets');
 
-var no_of_tweets = 0;
+  socket.on('stop', (tweets) => {
+    $('#btn_start').prop("disabled", false);
+    $('#btn_stop').prop("disabled", true);
 
+    is_started = 0;
+    no_of_tweets = 0;
 
-
-  var socket = io();
-
-  var chart;
-
-  $('#btn_stop').click(function() {
-    socket.emit('stopStreamTweets');
-
-    //alert($('.highcharts-line-overview').highcharts().getCSV());
-
-    socket.on('stop', function(tweets){
-      $('#btn_start').prop("disabled", false);
-      $('#btn_stop').prop("disabled", true);
-
-      is_started = 0;
-      no_of_tweets = 0;
-
-      socket = io();
-
-    });
+    // Reset
+    socket = io();
 
   });
 
-  $('#keyword').keyup(function(e){
-    if(e.keyCode == 13)
-    {
-        startStreaming();
-    }
-    e.preventDefault();
 });
 
-  $('#getCsv').click(function() {
-    var chart = $('.highcharts-line-overview').highcharts();
-    $(this).attr('href', 'data:text/csv;charset=utf-8,'+escape(chart.getCSV()));
-    $(this).attr('download', "twitter-trend-analyzer.csv");
+$('#keyword').keyup((e) => {
+  if(e.keyCode == 13)
+  {
+      startStreaming();
+  }
+  e.preventDefault();
+});
 
-  });
+$('#getCsv').click(() => {
+  var chart = $('.highcharts-line-overview').highcharts();
+  $(this).attr('href', 'data:text/csv;charset=utf-8,'+escape(chart.getCSV()));
+  $(this).attr('download', "twitter-trend-analyzer.csv");
+
+});
+
 var markers = [];
 var map;
-  // Adds a marker to the map and push to the array.
-  function addMarker(location, title, contentString) {
+// Adds a marker to the map and push to the array.
+const addMarker = (location, title, contentString) => {
 
-    var infowindow = new google.maps.InfoWindow({
-          content: '<p class="m-t-1"><span>'+contentString+'</span></p>'+
-          '  <span>@'+title+'</span>'
-        });
-
-    var marker = new google.maps.Marker({
-      position: location,
-      map: map,
-      title: '@'+title,
-      icon: 'http://www.thedailynole.com/images/misc/twitter.png',
-    });
-
-    marker.addListener('click', function() {
-        infowindow.open(map, marker);
+  let infowindow = new google.maps.InfoWindow({
+        content: '<p class="m-t-1"><span>'+contentString+'</span></p>'+
+        '  <span>@'+title+'</span>'
       });
-    markers.push(marker);
-  }
 
-  // Sets the map on all markers in the array.
-  function setMapOnAll(map) {
-    for (var i = 0; i < markers.length; i++) {
-      markers[i].setMap(map);
-    }
-  }
+  let marker = new google.maps.Marker({
+    position: location,
+    map: map,
+    title: '@'+title,
+    icon: 'http://www.thedailynole.com/images/misc/twitter.png',
+  });
 
-  // Removes the markers from the map, but keeps them in the array.
-  function clearMarkers() {
-    setMapOnAll(null);
-  }
+  marker.addListener('click', function() {
+      infowindow.open(map, marker);
+    });
+  markers.push(marker);
+}
 
-  // Shows any markers currently in the array.
-  function showMarkers() {
-    setMapOnAll(map);
+// Sets the map on all markers in the array.
+const setMapOnAll = (map) => {
+  for (var i = 0; i < markers.length; i++) {
+    markers[i].setMap(map);
   }
+}
 
-  // Deletes all markers in the array by removing references to them.
-  function deleteMarkers() {
-    clearMarkers();
-    markers = [];
-  }
+// Removes the markers from the map, but keeps them in the array.
+const clearMarkers = () => {
+  setMapOnAll(null);
+}
 
-$('#btn_start').click(function() {
+// Shows any markers currently in the array.
+const showMarkers = () => {
+  setMapOnAll(map);
+}
+
+// Deletes all markers in the array by removing references to them.
+const deleteMarkers = () => {
+  clearMarkers();
+  markers = [];
+}
+
+$('#btn_start').click(() => {
   startStreaming();
   event.preventDefault();
 });
 
-function startStreaming() {
+const startStreaming = () => {
   is_started = 1;
 
   $("#no-of-tweets").empty().append('<h1 class="f-w-300  m-t-0 m-b-0">'+no_of_tweets+'</h1>')
@@ -115,40 +110,30 @@ function startStreaming() {
     socket.emit('streamTweets',{keyword:$('#keyword').val()});
 
     // Receive the server's Stream API's result
-    socket.on('tweets', function(tweets){
-        //console.log(tweets);
-
+    socket.on('tweets', (tweets) => {
+        const { created_at, text, user: {name, screen_name, location = ""} } = $.parseJSON(tweets);
         // DOM appending
         if(is_started == 1){
           no_of_tweets++;
-          if(no_of_tweets%200 == 0)  $("#search-result").empty();
-          $("#no-of-tweets").empty().append('<h1 class="f-w-300  m-t-0 m-b-0">'+no_of_tweets+'</h1>')
+          if(no_of_tweets % 200 == 0)  $("#search-result").empty();
+
+          $("#no-of-tweets").empty().append(`<h1 class="f-w-300  m-t-0 m-b-0">${no_of_tweets}</h1>`)
+
           $("#search-result")
-          .prepend('<hr>')
-          .prepend('  <p class="m-t-1"><span>'+$.parseJSON(tweets).text+'</span></p>')
-          .prepend('  <span>@'+$.parseJSON(tweets).user.screen_name+'</span> &middot; '+$.parseJSON(tweets).created_at+'')
-          .prepend('<h5 class="m-b-0"><a href="#"><span>'+$.parseJSON(tweets).user.name+'</span></a></h5>');
+            .prepend('<hr>')
+            .prepend(`  <p class="m-t-1"><span>${text}+'</span></p>`)
+            .prepend(`  <span>@${screen_name}</span> &middot; ${created_at}`)
+            .prepend(`<h5 class="m-b-0"><a href="#"><span>${name}</span></a></h5>`);
 
-          if(typeof $.parseJSON(tweets).user.location !== undefined && $.parseJSON(tweets).user.location !== null){
-            $.get("https://maps.google.com/maps/api/geocode/json?key=AIzaSyBM3FWODGBMwigdcykSrqHjzzdjWk8N-bo&address="+$.parseJSON(tweets).user.location).done(function(data){
-                //console.log(data);
-                var latLng = new google.maps.LatLng(data.results[0].geometry.location.lat,data.results[0].geometry.location.lng);
-                /*var marker = new google.maps.Marker({
-                  position: latLng,
-                  icon: 'http://www.thedailynole.com/images/misc/twitter.png',
-                  map: map
-                });*/
+          // Get address to latlng and add marker
+          if(location !== ""){
+            $.get(`https://maps.google.com/maps/api/geocode/json?key=${google_api_key}&address=${location}`).done(function(data){
+              const { lat, lng } = data.results[0].geometry.location;
+              const latLng = new google.maps.LatLng(lat, lng);
 
-                addMarker(latLng, $.parseJSON(tweets).user.screen_name, $.parseJSON(tweets).text);
+              addMarker(latLng, screen_name, text);
             });
-            //console.log($.parseJSON(tweets).user.location);
-
-
           }
-
-
-          //setChartData(global_categories, global_series);
-          //$('.highcharts-line-overview').xAxis.setCategories( categories );
         }
 
 
@@ -158,22 +143,20 @@ function startStreaming() {
 $.get( '/searchTweets',
   {
   "keyword":encodeURIComponent($("#keyword").val())
-}, function(data){
+  }, (data) =>{
+    const results = $.parseJSON(data).statuses;
 
-      for(var idx in $.parseJSON(data).statuses){
-          $("#search-result")
-            .append('<h5 class="m-b-0"><a href="#"><span>'+$.parseJSON(data).statuses[idx].user.name+'</span></a></h5>')
-            .append('  <span>@'+$.parseJSON(data).statuses[idx].user.screen_name+'</span> &middot; '+$.parseJSON(data).statuses[idx].created_at+'')
-            .append('  <p class="m-t-1"><span>'+$.parseJSON(data).statuses[idx].text+'</span></p>')
-            .append('<hr>');
-
-      }
-
+    // Attach results into the list
+    results.forEach((status) => {
+      $("#search-result")
+        .append(`<h5 class="m-b-0"><a href="#"><span>${status.user.name}</span></a></h5>`)
+        .append(`<span>@${status.user.screen_name}</span> &middot; ${status.created_at}`)
+        .append(`<p class="m-t-1"><span>${status.text}</span></p>`)
+        .append(`<hr />`);
+    })
   });
 
-
-
-  function redrawChart(){
+  redrawChart = () =>{
 
     chart = $('.highcharts-line-overview').highcharts({
       chart: {
@@ -183,31 +166,23 @@ $.get( '/searchTweets',
           animation: Highcharts.svg, // don't animate in old IE
           events:{
             load: function () {
-
               var self = this;
 
-              socket.on('tweets', function(tweets){
-                  //console.log(tweets);
-
+              socket.on('tweets', (tweets) =>{
                   // DOM appending
-                  if(is_started == 1){
+                  if(is_started === 1){
 
-                    var date = moment($.parseJSON(tweets).created_at, 'dd MMM DD HH:mm:ss ZZ YYYY', 'en').format("YYYYMMDDhmmss");
-                    //console.log(date);
-                    //global_series[date] = (global_series[date] === undefined || global_series[date] === null ? 0 : global_series[date] + 1);
-                    //self.series[0].addPoint([date, global_series[date]], true, true);
-                    //self.series[0].data = global_series;
+                    const { created_at } = $.parseJSON(tweets);
 
+                    const date = moment(created_at, 'dd MMM DD HH:mm:ss ZZ YYYY', 'en').format("YYYYMMDDhmmss");
 
                     if(global_datas[date] === null || global_datas[date] === undefined)  global_datas[date] = 1;
                     else {
                       global_datas[date]++;
                     }
 
-
-                    var date2 = moment($.parseJSON(tweets).created_at).toDate();
-                    //console.log(moment($.parseJSON(tweets).created_at, 'dd MMM DD HH:mm:ss ZZ YYYY', 'en').toDate().getTime());
-                    self.series[0].addPoint([moment($.parseJSON(tweets).created_at, 'dd MMM DD HH:mm:ss ZZ YYYY', 'en').toDate().getTime(), global_datas[date]],true,false);//add to last
+                    var date2 = moment(created_at).toDate();
+                    self.series[0].addPoint([moment(created_at, 'dd MMM DD HH:mm:ss ZZ YYYY', 'en').toDate().getTime(), global_datas[date]],true,false);//add to last
                   }
 
 
@@ -228,7 +203,7 @@ $.get( '/searchTweets',
           type: 'datetime',
           tickPixelInterval: 150,
           labels: {
-              formatter: function() {
+              formatter: () => {
                   return Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.value);
               }
           }
@@ -253,7 +228,7 @@ $.get( '/searchTweets',
       tooltip: {
           valueSuffix: '',
           labels: {
-              formatter: function() {
+              formatter: () => {
                   return Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.value);
               }
           }
@@ -269,12 +244,11 @@ $.get( '/searchTweets',
           name: $('#keyword').val(),
           data: (function () {
           // generate an array of random data
-          var data = [],
-              time = parseInt(moment().format("YYYYMMDDhmmss")),
-              i;
+          let data = [], i;
+
+          const time = parseInt(moment().format("YYYYMMDDhmmss"));
 
           for (i = -19; i <= 0; i += 1) {
-            //console.log(moment().add(i, 's').format($("#search_type").val()).toDate());
             var d = moment().add(i, 's').toDate();
               data.push({
                   x: moment().add(i, 's').utc().toDate().getTime(),
@@ -307,13 +281,7 @@ $.get( '/searchTweets',
 
 $(function() {
 /** Highcharts Settings To Gallery from highcharts.html **/
-
-
     // Load the default twitters
-
-
-
-
     /** This chart from (Visitor Chart) overview.html **/
     Dashboard.Helpers.elementExists('.highcharts-line-overview', function() {
 
@@ -344,7 +312,7 @@ $(function() {
                 type: 'datetime',
                 tickPixelInterval: 150,
                 labels: {
-                    formatter: function() {
+                    formatter: () => {
                         return Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.value);
                     }
                 }
@@ -369,7 +337,7 @@ $(function() {
             tooltip: {
                 valueSuffix: '',
                 labels: {
-                    formatter: function() {
+                    formatter: () => {
                         return Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.value);
                     }
                 }
@@ -418,11 +386,6 @@ $(function() {
                 }
             }]
         });
-    });
-
-    /** This chart from (Visitor Chart) overview.html **/
-    Dashboard.Helpers.elementExists('.highmap', function() {
-
     });
 
 

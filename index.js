@@ -28,11 +28,6 @@ app.get('/', function(request, response) {
   response.render('pages/index');
 });
 
-app.get('/hi', function(request, response) {
-  response.send("Hello World!");
-});
-
-// http://localhost/searchTweets?keyword=adasd
 app.get('/searchTweets', function(request, response){
   var keyword = request.param('keyword');
   response.set('Content-Type', 'application/javascript');
@@ -46,7 +41,6 @@ app.get('/searchTweets', function(request, response){
 http.listen(app.get('port'), function(){
   console.log('Node app is running on port', app.get('port'));
 });
-
 
 
 // Twitter Stream API

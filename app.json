@@ -1,8 +1,7 @@
 {
-  "name": "Start on Heroku: Node.js",
-  "description": "A barebones Node.js app using Express 4",
-  "repository": "https://github.com/heroku/node-js-getting-started",
-  "logo": "http://node-js-sample.herokuapp.com/node.svg",
-  "keywords": ["node", "express", "heroku"],
+  "name": "Twitter Trend Analyzer",
+  "description": "The trend analysis engine for a specific keyword of Twitter by using a graphical chart and geographical chart.",
+  "repository": "https://github.com/IkwhanChang/twitter-trend-analyzer",
+  "keywords": ["node", "express", "twitter", "heroku"],
   "image": "heroku/nodejs"
 }

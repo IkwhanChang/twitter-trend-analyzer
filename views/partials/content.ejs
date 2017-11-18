@@ -18,17 +18,12 @@
 <script src="vendor/js/daterangepicker.min.js"></script>
 <script src="javascript/date-range-picker-settings.js"></script>
 
-
-
-
-
-<!-- START Sub-Navbar with Header and Breadcrumbs AIzaSyBM3FWODGBMwigdcykSrqHjzzdjWk8N-bo-->
 <div class="sub-navbar sub-navbar__header-breadcrumbs">
     <div class="container">
         <div class="row">
             <div class="col-lg-12 sub-navbar-column">
                 <div class="sub-navbar-header">
-                    <h3>Twitter Analyzer</h3>
+                    <h3>Twitter Trend Analyzer</h3>
                 </div>
                 <ol class="breadcrumb navbar-text navbar-right no-bg">
                     <li class="current-parent">
@@ -38,7 +33,7 @@
                     </li>
                     <li  class="active">
                         <a>
-                            Twitter Analyzer
+                            Twitter Trend Analyzer
                         </a>
                     </li>
                 </ol>
@@ -47,7 +42,6 @@
     </div>
 </div>
 <!-- END Sub-Navbar with Header and Breadcrumbs-->
-
 
 <div class="container" id="daterangepicker-container">
 
@@ -86,59 +80,57 @@
     </div>
     <!-- END Content -->
     <!-- START ROWs #1 -->
-        <div class="row m-t-1 m-b-2">
+    <div class="row m-t-1 m-b-2">
 
-          <div class="col-lg-8">
-            <div class="hr-text hr-text-left m-b-0">
-                <h6 class="text-white"><strong>Realtime Trend Analyzer</strong></h6>
+      <div class="col-lg-8">
+        <div class="hr-text hr-text-left m-b-0">
+            <h6 class="text-white"><strong>Realtime Trend Analyzer</strong></h6>
+        </div>
+        <div class="panel panel-default shadow-box b-a-0">
+
+            <div class="panel-body">
+              <div class="highcharts-line-overview"></div>
             </div>
-            <div class="panel panel-default shadow-box b-a-0">
+        </div>
+        <div class="hr-text hr-text-left m-b-0">
+            <h6 class="text-white"><strong>Realtime Trend Map</strong></h6>
+        </div>
+        <div id="map" style="width:100%;height:500px;"></div>
+      </div>
+      <div class="col-lg-4">
+        <div class="panel panel-default shadow-box b-a-0">
 
-                <div class="panel-body">
-                  <div class="highcharts-line-overview"></div>
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-lg-6">
+                    <i class="fa fa-flash fa-2x fa-fw text-soft-purple"></i>
+                </div>
+
+                <div class="col-lg-6 text-right">
+                    <p class="m-b-0  text-gray-light">Tweets</p>
+                    <h1 class="f-w-300  m-t-0 m-b-0"><div id="no-of-tweets">0</div></h1>
+
                 </div>
             </div>
-
-
-            <div class="hr-text hr-text-left m-b-0">
-                <h6 class="text-white"><strong>Realtime Trend Map</strong></h6>
             </div>
-            <div id="map" style="width:100%;height:500px;"></div>
+        </div>
+
+        <div class="block social-block social-twitter">
+          <div class="hr-text hr-text-left m-b-0">
+              <h6 class="text-white"><strong>Search Result </strong></h6>
           </div>
-          <div class="col-lg-4">
-            <div class="panel panel-default shadow-box b-a-0">
-
-                <div class="panel-body">
-                  <div class="row">
-                    <div class="col-lg-6">
-                        <i class="fa fa-flash fa-2x fa-fw text-soft-purple"></i>
-                    </div>
-
-                    <div class="col-lg-6 text-right">
-                        <p class="m-b-0  text-gray-light">Tweets</p>
-                        <h1 class="f-w-300  m-t-0 m-b-0"><div id="no-of-tweets">0</div></h1>
-
-                    </div>
-                </div>
-                </div>
-            </div>
-
-            <div class="block social-block social-twitter">
-              <div class="hr-text hr-text-left m-b-0">
-                  <h6 class="text-white"><strong>Search Result </strong></h6>
-              </div>
-              <div id="search-result">
-              </div>
-            </div>
+          <div id="search-result">
           </div>
         </div>
-        <!-- END ROWs #1 -->
+      </div>
+    </div>
+    <!-- END ROWs #1 -->
+
+  </div>
 
 </div>
 
-        </div>
-
-        <script src="javascript/script.js"></script>
-        <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBM3FWODGBMwigdcykSrqHjzzdjWk8N-bo&libraries=visualization&callback=initMap">
-    </script>
+<script src="js/script.js"></script>
+<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBM3FWODGBMwigdcykSrqHjzzdjWk8N-bo&libraries=visualization&callback=initMap">
+</script>
