@@ -128,18 +128,13 @@ const startStreaming = () => {
       // Get address to latlng and add marker
       if (location !== "" && location !== null && location !== undefined) {
         console.log("call geocoding")
-        geocoder.geocode({ 'address': location }, function (results, status) {
-          if (status === 'OK') {
-            map.setCenter(results[0].geometry.location);
-
-            const { lat, lng } = data.results[0].geometry.location;
-            const latLng = new google.maps.LatLng(lat, lng);
-
-            addMarker(latLng, screen_name, text);
-          } else {
-            alert('Geocode was not successful for the following reason: ' + status);
-          }
+        $.get(`https://us1.locationiq.com/v1/search.php?key=a60d1b393dd506&q=${location}&format=json`).done(function (data) {
+          const { lat, lon } = data.results[0];
+          const latLng = new google.maps.LatLng(lat, lon);
+          map.setCenter(latLng);
+          addMarker(latLng, screen_name, text);
         });
+        
       }
     }
 
