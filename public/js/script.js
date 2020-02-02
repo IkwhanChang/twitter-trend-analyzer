@@ -56,7 +56,7 @@ const addMarker = (location, title, contentString) => {
     position: location,
     map: map,
     title: '@' + title,
-    icon: 'http://www.thedailynole.com/images/misc/twitter.png',
+    icon: './images/twitter.png',
   });
 
   marker.addListener('click', function () {
