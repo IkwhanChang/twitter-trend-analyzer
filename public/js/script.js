@@ -126,7 +126,7 @@ const startStreaming = () => {
             .prepend(`<h5 class="m-b-0"><a href="#"><span>${name}</span></a></h5>`);
 
           // Get address to latlng and add marker
-          if(location !== ""){
+          if(location !== "" && location !== null && location !== undefined){
             $.get(`https://maps.google.com/maps/api/geocode/json?key=${google_api_key}&address=${location}`).done(function(data){
               const { lat, lng } = data.results[0].geometry.location;
               const latLng = new google.maps.LatLng(lat, lng);
