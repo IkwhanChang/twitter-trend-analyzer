@@ -8,7 +8,7 @@ let global_categories = [],
 let socket = io();
 let chart;
 
-const google_api_key = "AIzaSyBM3FWODGBMwigdcykSrqHjzzdjWk8N-bo";
+const google_api_key = "AIzaSyCt8h9YTf_BLaSNIvRL6hX925OnyYYXDLQ";
 
 $('#btn_stop').click(() => {
   socket.emit('stopStreamTweets');
