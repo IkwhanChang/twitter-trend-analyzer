@@ -127,7 +127,7 @@ const startStreaming = () => {
 
       // Get address to latlng and add marker
       if (location !== "" && location !== null && location !== undefined) {
-
+        console.log("call geocoding")
         geocoder.geocode({ 'address': location }, function (results, status) {
           if (status === 'OK') {
             map.setCenter(results[0].geometry.location);
