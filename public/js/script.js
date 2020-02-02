@@ -189,6 +189,9 @@ redrawChart = () => {
               }
 
               var date2 = moment(created_at).toDate();
+              console.log(self)
+              console.log(this)
+              console.log(this.chart)
               self.series[0].addPoint([moment(created_at, 'dd MMM DD HH:mm:ss ZZ YYYY', 'en').toDate().getTime(), global_datas[date]], true, false);//add to last
             }
 
