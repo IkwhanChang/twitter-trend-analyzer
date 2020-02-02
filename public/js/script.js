@@ -9,7 +9,7 @@ let socket = io();
 let chart;
 
 const google_api_key = "AIzaSyCt8h9YTf_BLaSNIvRL6hX925OnyYYXDLQ";
-const geocoder = new google.maps.Geocoder;
+let geocoder
 
 $('#btn_stop').click(() => {
   socket.emit('stopStreamTweets');
@@ -400,6 +400,7 @@ $(function () {
 
 var map;
 function initMap() {
+  geocoder = new google.maps.Geocoder;
   map = new google.maps.Map(document.getElementById('map'), {
     zoom: 2,
     center: { lat: 37.3351874, lng: -121.8832602 },
